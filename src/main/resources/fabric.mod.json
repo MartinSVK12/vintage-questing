@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "vintagequesting",
+  "version": "${version}",
+
+  "name": "Vintage Questing",
+  "description": "A questing mod for BTA.",
+  "authors": [
+    "sunsetsatellite"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+	"icon": "icon.png",
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+    ],
+		"beforeGameStart": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+		],
+		"afterGameStart": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+		],
+		"recipesReady": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+		]
+	},
+  "mixins": [
+		"vintagequesting.mixins.json"
+  ],
+
+  "depends": {
+		"minecraft": "^7.2-beta",
+    "fabricloader": ">=0.15.5"
+  },
+  "suggests": {
+  }
+}

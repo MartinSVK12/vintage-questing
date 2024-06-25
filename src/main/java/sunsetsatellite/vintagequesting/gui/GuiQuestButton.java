@@ -2,13 +2,8 @@ package sunsetsatellite.vintagequesting.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.FontRenderer;
 import net.minecraft.client.render.Lighting;
-import net.minecraft.client.render.block.model.BlockModel;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.model.ItemModelDispatcher;
-import net.minecraft.client.render.tessellator.Tessellator;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.quest.Quest;
 
@@ -54,15 +49,8 @@ public class GuiQuestButton extends GuiButton {
 
 			GL11.glEnable(3553);
 
-			ItemModel model = ItemModelDispatcher.getInstance().getDispatch(quest.getIcon().getDefaultStack());
-
 			GL11.glPushMatrix();
-			GL11.glTranslatef(x,y,0);
-			Lighting.enableInventoryLight();
-			GL11.glScalef(iconSize,iconSize,0);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			BlockModel.setRenderBlocks(EntityRenderDispatcher.instance.itemRenderer.renderBlocksInstance);
-			model.renderItemIntoGui(Tessellator.instance, fontrenderer, mc.renderEngine, quest.getIcon().getDefaultStack(), 0,0, 1);
+			ItemRenderHelper.renderItemStack(quest.getIcon().getDefaultStack(),x, y, iconSize, iconSize, 1, 1);
 			GL11.glPopMatrix();
 			GL11.glDisable(2896);
 			GL11.glDisable(2884);

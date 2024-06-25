@@ -54,7 +54,7 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		ArrayList<Quest> list = new ArrayList<>();
 		list.add(testQuest);
 		list.add(testQuest2);
-		Chapter chapter = new Chapter(Item.foodApple,"chapter.vq.test","chapter.vq.test", list);
+		Chapter chapter = new Chapter(Block.grass,"chapter.vq.test","chapter.vq.test", list);
 		Chapter chapter2 = new Chapter(Item.foodAppleGold,"chapter.vq.test2","chapter.vq.test2", new ArrayList<>());
 		chapters.add(chapter);
 		chapters.add(chapter2);

@@ -3,15 +3,8 @@ package sunsetsatellite.vintagequesting.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.render.FontRenderer;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.model.ItemModelDispatcher;
-import net.minecraft.client.render.stitcher.TextureRegistry;
-import net.minecraft.client.render.tessellator.Tessellator;
-import net.minecraft.core.lang.I18n;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.quest.Chapter;
-
-import java.awt.*;
 
 public class GuiChapterButton extends GuiButton {
 
@@ -49,9 +42,7 @@ public class GuiChapterButton extends GuiButton {
 					textColor = 16777120;
 			}
 
-			ItemModel model = ItemModelDispatcher.getInstance().getDispatch(chapter.getIcon().getDefaultStack());
-
-			model.renderItemIntoGui(Tessellator.instance, fontrenderer, mc.renderEngine, chapter.getIcon().getDefaultStack(),this.xPosition - 16, this.yPosition, 1);
+			ItemRenderHelper.renderItemStack(chapter.getIcon().getDefaultStack(),this.xPosition - 16, this.yPosition, 1, 1, 1, 1);
 
 			GL11.glDisable(2896);
 			GL11.glDisable(2884);

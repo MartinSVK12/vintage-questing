@@ -27,6 +27,12 @@
 		"afterGameStart": [
 			"sunsetsatellite.vintagequesting.VintageQuesting"
 		],
+		"beforeClientStart": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+		],
+		"afterClientStart": [
+			"sunsetsatellite.vintagequesting.VintageQuesting"
+		],
 		"recipesReady": [
 			"sunsetsatellite.vintagequesting.VintageQuesting"
 		]

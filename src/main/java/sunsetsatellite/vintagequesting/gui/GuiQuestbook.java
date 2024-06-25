@@ -13,7 +13,6 @@ import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static sunsetsatellite.vintagequesting.VintageQuesting.CHAPTERS;
 import static sunsetsatellite.vintagequesting.VintageQuesting.currentChapter;

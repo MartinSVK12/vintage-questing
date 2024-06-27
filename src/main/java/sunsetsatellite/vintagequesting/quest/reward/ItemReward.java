@@ -1,19 +1,20 @@
 package sunsetsatellite.vintagequesting.quest.reward;
 
 import net.minecraft.core.entity.player.EntityPlayer;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.quest.Reward;
+import sunsetsatellite.vintagequesting.quest.template.reward.ItemRewardTemplate;
 
 public class ItemReward extends Reward {
 
 	private final ItemStack item;
 
-	public ItemReward(ItemStack stack) {
-		this.item = stack;
+	public ItemReward(ItemRewardTemplate template) {
+		super(template);
+		this.item = template.getStack();
 	}
 
-	public ItemStack getItem() {
+	public ItemStack getStack() {
 		return item.copy();
 	}
 

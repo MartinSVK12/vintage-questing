@@ -3,6 +3,9 @@ package sunsetsatellite.vintagequesting.quest;
 import net.minecraft.client.render.stitcher.IconCoordinate;
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
+import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
+import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 import sunsetsatellite.vintagequesting.util.Logic;
 
 import java.util.ArrayList;
@@ -25,12 +28,34 @@ public class Quest {
 	protected List<Quest> preRequisites = new ArrayList<>();
 	protected List<Reward> rewards = new ArrayList<>();
 
-	public Quest(String name, String description, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
-		this.name = name;
-		this.description = description;
-		this.icon = icon;
-		this.questLogic = questLogic;
-		this.taskLogic = taskLogic;
+	public Quest(QuestTemplate template) {
+		this.name = template.getName();
+		this.description = template.getDescription();
+		this.x = template.getX();
+		this.y = template.getY();
+		this.width = template.getWidth();
+		this.height = template.getHeight();
+		this.icon = template.getIcon();
+		this.iconSize = template.getIconSize();
+		this.repeat = template.isRepeat();
+		this.repeatTicks = template.getRepeatTicks();
+		this.questLogic = template.getQuestLogic();
+		this.taskLogic = template.getTaskLogic();
+		ArrayList<Task> taskList = new ArrayList<>();
+		ArrayList<Quest> preRequisiteList = new ArrayList<>();
+		ArrayList<Reward> rewardList = new ArrayList<>();
+		for (TaskTemplate task : template.getTasks()) {
+			taskList.add(task.getInstance());
+		}
+		for (QuestTemplate preRequisite : template.getPreRequisites()) {
+            preRequisiteList.add(preRequisite.getInstance());
+        }
+        for (RewardTemplate reward : template.getRewards()) {
+            rewardList.add(reward.getInstance());
+        }
+        this.tasks = taskList;
+        this.preRequisites = preRequisiteList;
+        this.rewards = rewardList;
 	}
 
 	public int getWidth() {

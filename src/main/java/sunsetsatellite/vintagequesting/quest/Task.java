@@ -1,15 +1,20 @@
 package sunsetsatellite.vintagequesting.quest;
 
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
 public abstract class Task {
 
 	protected boolean canConsume;
-	protected boolean checkNBT;
+	protected boolean checkNbt;
 	protected String typeName;
+	protected final TaskTemplate template;
 
-	public Task(String typeName) {
-		this.typeName = typeName;
+	public Task(TaskTemplate template) {
+		this.template = template;
+		this.typeName = template.getTypeName();
+		this.checkNbt = template.checksNbt();
+		this.canConsume = template.canConsume();
 	}
 
 	public abstract boolean isCompleted();
@@ -27,4 +32,6 @@ public abstract class Task {
 	public boolean canConsume() {
 		return canConsume;
 	}
+
+	public boolean checksNbt() {return checkNbt;}
 }

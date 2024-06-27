@@ -39,7 +39,7 @@ public class GuiItemRewardSlot extends Gui implements IRenderable {
 		}
 		drawSlot(mc.renderEngine, x+3,y+3,0xFFFFFFFF);
 		GL11.glEnable(3553);
-		ItemStack item = reward.getItem();
+		ItemStack item = reward.getStack();
 		ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
 		Lighting.enableInventoryLight();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

@@ -7,6 +7,7 @@ import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.client.render.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.Pair;
@@ -21,6 +22,10 @@ import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.task.ClickTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
+import sunsetsatellite.vintagequesting.registry.QuestRegistry;
+import sunsetsatellite.vintagequesting.registry.RewardRegistry;
+import sunsetsatellite.vintagequesting.registry.TaskRegistry;
 import sunsetsatellite.vintagequesting.util.Logic;
 import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
@@ -32,8 +37,13 @@ import java.util.*;
 public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, GameStartEntrypoint, RecipeEntrypoint {
     public static final String MOD_ID = "vintagequesting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final List<Chapter> chapters = new ArrayList<>();
 	public static GuiChapterButton currentChapter = null;
+
+	public static final ChapterRegistry CHAPTERS = new ChapterRegistry();
+	public static final QuestRegistry QUESTS = new QuestRegistry();
+	public static final RewardRegistry REWARDS = new RewardRegistry();
+	public static final TaskRegistry TASKS = new TaskRegistry();
+
     @Override
     public void onInitialize() {
         LOGGER.info("Vintage Questing initialized.");
@@ -46,18 +56,10 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 
 	@Override
 	public void afterGameStart() {
-		ItemReward reward = new ItemReward(new ItemStack(Item.diamond,1));
-		ClickTask task = new ClickTask();
-		RetrievalTask task2 = new RetrievalTask(new ItemStack(Block.netherrackIgneous,16));
-		Quest testQuest = new Quest("quest.vq.test","quest.vq.test", Block.blockDiamond, Logic.AND,Logic.AND).setRewards(Collections.singletonList(reward)).setTasks(listOf(task,task2));
-		Quest testQuest2 = new Quest("quest.vq.test2","quest.vq.test2", Block.dirt, Logic.AND,Logic.AND).setX(128).setY(-64).setPreRequisites(Collections.singletonList(testQuest)).setTasks(Collections.singletonList(task.copy()));
-		ArrayList<Quest> list = new ArrayList<>();
-		list.add(testQuest);
-		list.add(testQuest2);
-		Chapter chapter = new Chapter(Item.foodApple,"chapter.vq.test","chapter.vq.test", list);
-		Chapter chapter2 = new Chapter(Item.foodAppleGold,"chapter.vq.test2","chapter.vq.test2", new ArrayList<>());
-		chapters.add(chapter);
-		chapters.add(chapter2);
+		Registries.getInstance().register("vintagequesting:chapters",CHAPTERS);
+		Registries.getInstance().register("vintagequesting:quests",QUESTS);
+		Registries.getInstance().register("vintagequesting:rewards", REWARDS);
+        Registries.getInstance().register("vintagequesting:tasks", TASKS);
 	}
 
 	@Override

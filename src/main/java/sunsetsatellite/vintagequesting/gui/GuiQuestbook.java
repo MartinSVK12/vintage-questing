@@ -9,12 +9,13 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
+import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static sunsetsatellite.vintagequesting.VintageQuesting.chapters;
+import static sunsetsatellite.vintagequesting.VintageQuesting.CHAPTERS;
 import static sunsetsatellite.vintagequesting.VintageQuesting.currentChapter;
 
 public class GuiQuestbook extends GuiScreen {
@@ -81,8 +82,8 @@ public class GuiQuestbook extends GuiScreen {
 		super.init();
 
 		int id = 0;
-		for (Chapter chapter : chapters) {
-			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter,24,24 + (id * 20),120,20);
+		for (ChapterTemplate chapter : CHAPTERS) {
+			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter.getInstance(),24,24 + (id * 20),120,20);
 			controlList.add(chapterButton);
 			id++;
 		}

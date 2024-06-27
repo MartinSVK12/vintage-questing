@@ -13,7 +13,6 @@ import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
-import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
 
 public class GuiRetrievalTaskSlot extends Gui implements IRenderable {
@@ -40,7 +39,7 @@ public class GuiRetrievalTaskSlot extends Gui implements IRenderable {
 		}
 		drawSlot(mc.renderEngine, x+3,y+3,0xFFFFFFFF);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		ItemStack item = task.getItem();
+		ItemStack item = task.getStack();
 		ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
 		Lighting.enableInventoryLight();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

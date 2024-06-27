@@ -1,6 +1,7 @@
 package sunsetsatellite.vintagequesting.mixin;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.option.KeyBinding;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.GuiQuestbook;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
 
@@ -25,6 +27,8 @@ public abstract class MinecraftMixin {
 	@Shadow
 	public abstract void displayGuiScreen(GuiScreen guiscreen);
 
+	@Shadow
+	public EntityPlayerSP thePlayer;
 	@Unique
 	private static int debounce = 0;
 
@@ -40,7 +44,7 @@ public abstract class MinecraftMixin {
 		KeyBinding openQuestbook = keybinds.vintage_questing$getKeyOpenQuestbook();
 		if(debounce <= 0){
 			if(openQuestbook.isPressed() && currentScreen == null){
-				displayGuiScreen(new GuiQuestbook(null));
+				VintageQuesting.QUESTBOOK.open(this.thePlayer);
 				debounce = 10;
 			}
 		}

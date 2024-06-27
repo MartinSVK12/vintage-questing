@@ -2,6 +2,8 @@ package sunsetsatellite.vintagequesting;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.options.components.KeyBindingComponent;
 import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPages;
@@ -10,11 +12,16 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.util.collection.Pair;
+import net.minecraft.server.entity.player.EntityPlayerMP;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.vintagequesting.gui.GuiChapterButton;
 import sunsetsatellite.vintagequesting.gui.GuiQuestButton;
+import sunsetsatellite.vintagequesting.gui.GuiQuestInfo;
 import sunsetsatellite.vintagequesting.gui.GuiQuestbook;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
 import sunsetsatellite.vintagequesting.quest.Chapter;
@@ -22,11 +29,14 @@ import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.task.ClickTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
 import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
 import sunsetsatellite.vintagequesting.registry.QuestRegistry;
 import sunsetsatellite.vintagequesting.registry.RewardRegistry;
 import sunsetsatellite.vintagequesting.registry.TaskRegistry;
 import sunsetsatellite.vintagequesting.util.Logic;
+import turniplabs.halplibe.helper.gui.factory.base.GuiFactory;
+import turniplabs.halplibe.helper.gui.registered.RegisteredGui;
 import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 import turniplabs.halplibe.util.RecipeEntrypoint;
@@ -44,6 +54,18 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 	public static final RewardRegistry REWARDS = new RewardRegistry();
 	public static final TaskRegistry TASKS = new TaskRegistry();
 
+	public static final RegisteredGui QUESTBOOK = new RegisteredGui(MOD_ID, "questbook", new GuiFactory() {
+		@Override
+		public @NotNull GuiScreen createGui(@NotNull RegisteredGui gui, @NotNull EntityPlayerSP player) {
+			return new GuiQuestbook(null);
+		}
+
+		@Override
+		public @Nullable Container createContainer(@NotNull RegisteredGui gui, @NotNull EntityPlayerMP player) {
+			return null;
+		}
+	}, true);
+
     @Override
     public void onInitialize() {
         LOGGER.info("Vintage Questing initialized.");
@@ -60,6 +82,9 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		Registries.getInstance().register("vintagequesting:quests",QUESTS);
 		Registries.getInstance().register("vintagequesting:rewards", REWARDS);
         Registries.getInstance().register("vintagequesting:tasks", TASKS);
+
+		ChapterTemplate chapter = new ChapterTemplate(Block.dirt,"chapter.vq.test","chapter.vq.test",new ArrayList<>());
+		CHAPTERS.register("vintagequesting:test", chapter);
 	}
 
 	@Override

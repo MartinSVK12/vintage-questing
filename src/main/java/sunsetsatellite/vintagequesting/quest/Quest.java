@@ -1,8 +1,12 @@
 package sunsetsatellite.vintagequesting.quest;
 
+import com.mojang.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.stitcher.IconCoordinate;
+import net.minecraft.core.Global;
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.interfaces.IGuiQuestComplete;
 import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
 import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
@@ -14,21 +18,24 @@ import java.util.List;
 public class Quest {
 	protected String name;
 	protected String description;
-	protected int x = 0;
-	protected int y = 0;
-	protected int width = 32;
-	protected int height = 32;
-	protected int iconSize = 1;
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
+	protected int iconSize;
 	protected IItemConvertible icon;
 	protected Logic questLogic;
 	protected Logic taskLogic;
 	protected boolean repeat;
 	protected int repeatTicks;
-	protected List<Task> tasks = new ArrayList<>();
-	protected List<Quest> preRequisites = new ArrayList<>();
-	protected List<Reward> rewards = new ArrayList<>();
+	protected List<Task> tasks;
+	protected List<Quest> preRequisites;
+	protected List<Reward> rewards;
+	protected final QuestTemplate template;
+	protected boolean complete;
 
 	public Quest(QuestTemplate template) {
+		this.template = template;
 		this.name = template.getName();
 		this.description = template.getDescription();
 		this.x = template.getX();
@@ -208,11 +215,25 @@ public class Quest {
 	public boolean isCompleted(){
 		switch (taskLogic){
 			case AND:
-				return tasks.stream().allMatch(Task::isCompleted);
+				if (tasks.stream().allMatch(Task::isCompleted)){
+					if (!complete && !Global.isServer) {
+						((IGuiQuestComplete) Minecraft.getMinecraft(this)).getGuiQuestComplete().queueQuestComplete(this);
+						complete = true;
+					}
+					return true;
+				}
+				else return complete = false;
 			case OR:
-				return tasks.stream().anyMatch(Task::isCompleted);
+				if (tasks.stream().anyMatch(Task::isCompleted)){
+					if (!complete && !Global.isServer) {
+						((IGuiQuestComplete) Minecraft.getMinecraft(this)).getGuiQuestComplete().queueQuestComplete(this);
+						complete = true;
+					}
+					return true;
+				}
+				else return complete = false;
 		}
-		return false;
+		return complete = false;
 	}
 
 	public boolean preRequisitesCompleted(){
@@ -227,5 +248,17 @@ public class Quest {
 
 	public long numberOfCompletedTasks(){
 		return tasks.stream().filter(Task::isCompleted).count();
+	}
+
+	public QuestTemplate getTemplate() {
+		return template;
+	}
+
+	public void readFromNbt(CompoundTag nbt) {
+		complete = nbt.getBoolean("Completed");
+	}
+
+	public void writeToNbt(CompoundTag nbt) {
+		nbt.putBoolean("Completed", complete);
 	}
 }

@@ -21,7 +21,7 @@ public class GuiVerticalContainer
     public final List<IRenderable> renderables = new ArrayList<>();
     private final int height;
 
-	private int width;
+	private final int width;
     private int scrollbarX;
     private int scrollbarY;
     private int scrollbarWidth;
@@ -109,8 +109,7 @@ public class GuiVerticalContainer
         	isScrolling = true;
         	previousScrollAmount = scrollAmount;
         	clickY = y;
-        	return;
-        }
+		}
     }
 
     public void mouseMovedOrUp(int x, int y, int button)

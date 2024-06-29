@@ -4,8 +4,10 @@
   "package": "sunsetsatellite.vintagequesting.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EntityPlayerMixin",
     "GameSettingsMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "SlotCraftingMixin"
   ],
   "client": [
   ],

@@ -20,7 +20,7 @@ public class GuiMessageBox
     private final List<String> lines = new ArrayList<>();
     private final int height;
 
-	private int width;
+	private final int width;
     private int scrollbarX;
     private int scrollbarY;
     private int scrollbarWidth;
@@ -130,8 +130,7 @@ public class GuiMessageBox
         	isScrolling = true;
         	previousScrollAmount = scrollAmount;
         	clickY = y;
-        	return;
-        }
+		}
     }
 
     public void mouseMovedOrUp(int x, int y, int button)

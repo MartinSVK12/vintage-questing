@@ -2,23 +2,23 @@ package sunsetsatellite.vintagequesting.quest.template.task;
 
 import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.quest.Task;
-import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
-public class RetrievalTaskTemplate extends TaskTemplate {
+public class CraftingTaskTemplate extends TaskTemplate {
 
 	protected ItemStack requirement;
 	protected boolean canConsume;
 	protected boolean checkNbt;
 
-	public RetrievalTaskTemplate(String id, ItemStack stack) {
-		super(id,"type.task.vq.retrieval");
+	public CraftingTaskTemplate(String id, ItemStack stack) {
+		super(id,"type.task.vq.crafting");
 		this.requirement = stack;
 	}
 
 	@Override
 	public TaskTemplate copy() {
-		return new RetrievalTaskTemplate(id,requirement);
+		return new CraftingTaskTemplate(id,requirement);
 	}
 
 	public ItemStack getStack(){
@@ -27,15 +27,15 @@ public class RetrievalTaskTemplate extends TaskTemplate {
 
 	@Override
 	public Task getInstance() {
-		return new RetrievalTask(this);
+		return new CraftingTask(this);
 	}
 
-	public RetrievalTaskTemplate setConsume() {
+	public CraftingTaskTemplate setConsume() {
 		this.canConsume = true;
 		return this;
 	}
 
-	public RetrievalTaskTemplate setChecksNbt() {
+	public CraftingTaskTemplate setCheckNbt() {
 		this.checkNbt = true;
 		return this;
 	}

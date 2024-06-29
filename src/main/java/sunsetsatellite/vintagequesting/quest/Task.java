@@ -1,21 +1,29 @@
 package sunsetsatellite.vintagequesting.quest;
 
+import com.mojang.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
+
+import java.util.List;
 
 public abstract class Task {
 
-	protected boolean canConsume;
-	protected boolean checkNbt;
 	protected String typeName;
 	protected final TaskTemplate template;
 
 	public Task(TaskTemplate template) {
 		this.template = template;
 		this.typeName = template.getTypeName();
-		this.checkNbt = template.checksNbt();
-		this.canConsume = template.canConsume();
 	}
+
+	public Task(TaskTemplate template, CompoundTag tag) {
+		this.template = template;
+		this.typeName = template.getTypeName();
+		readFromNbt(tag);
+	}
+
 
 	public abstract boolean isCompleted();
 
@@ -29,9 +37,13 @@ public abstract class Task {
 
 	public abstract Task copy();
 
-	public boolean canConsume() {
-		return canConsume;
+	public abstract void readFromNbt(CompoundTag nbt);
+
+	public abstract void writeToNbt(CompoundTag nbt);
+
+	public TaskTemplate getTemplate() {
+		return template;
 	}
 
-	public boolean checksNbt() {return checkNbt;}
+	public abstract void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width);
 }

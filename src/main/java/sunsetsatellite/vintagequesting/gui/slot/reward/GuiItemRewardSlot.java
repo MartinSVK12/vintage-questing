@@ -15,9 +15,9 @@ public class GuiItemRewardSlot extends Gui implements IRenderable {
 
 	public int width;
 	public int height;
-	private Minecraft mc;
-	private ItemReward reward;
-	private GuiTooltip tooltip;
+	private final Minecraft mc;
+	private final ItemReward reward;
+	private final GuiTooltip tooltip;
 
 	public GuiItemRewardSlot(Minecraft mc, int width, int height, ItemReward reward){
 		this.width = width;

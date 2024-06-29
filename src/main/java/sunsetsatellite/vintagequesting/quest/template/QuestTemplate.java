@@ -2,6 +2,7 @@ package sunsetsatellite.vintagequesting.quest.template;
 
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestTemplate {
+	protected final String id;
 	protected String name;
 	protected String description;
 	protected int x = 0;
@@ -27,12 +29,18 @@ public class QuestTemplate {
 	protected List<QuestTemplate> preRequisites = new ArrayList<>();
 	protected List<RewardTemplate> rewards = new ArrayList<>();
 
-	public QuestTemplate(String name, String description, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
+	public QuestTemplate(String id, String name, String description, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.icon = icon;
 		this.questLogic = questLogic;
 		this.taskLogic = taskLogic;
+		VintageQuesting.QUESTS.register(id,this);
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public int getWidth() {

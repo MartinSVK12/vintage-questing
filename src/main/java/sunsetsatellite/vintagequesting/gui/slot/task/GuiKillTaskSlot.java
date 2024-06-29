@@ -4,22 +4,25 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTooltip;
 import net.minecraft.client.render.Lighting;
+import net.minecraft.core.entity.EntityDispatcher;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.gui.ItemRenderHelper;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
-import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
+import sunsetsatellite.vintagequesting.quest.task.KillTask;
 
-public class GuiRetrievalTaskSlot extends Gui implements IRenderable {
+public class GuiKillTaskSlot extends Gui implements IRenderable {
 
 	public int width;
 	public int height;
 	private final Minecraft mc;
-	private final RetrievalTask task;
+	private final KillTask task;
 	private final GuiTooltip tooltip;
 
-	public GuiRetrievalTaskSlot(Minecraft mc, int width, int height, RetrievalTask task){
+	public GuiKillTaskSlot(Minecraft mc, int width, int height, KillTask task){
 		this.width = width;
         this.height = height;
 		this.mc = mc;
@@ -33,21 +36,18 @@ public class GuiRetrievalTaskSlot extends Gui implements IRenderable {
 			drawRectWidthHeight(x,y,width,height,0xFF008000);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
-		drawSlot(mc.renderEngine, x+3,y+3,0xFFFFFFFF);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		ItemStack item = task.getStack();
+		ItemStack item = Item.toolSwordIron.getDefaultStack();
 		ItemRenderHelper.renderItemStack(item, x + 4, y + 4, 1, 1, 1,1);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		Lighting.disable();
 
-		drawString(mc.fontRenderer, task.getProgress()+" / "+item.stackSize+"x "+ item.getDisplayName(),x+28, y+8, 0xFFFFFFFF);
+		drawString(mc.fontRenderer, task.getProgress()+" / "+task.getRequiredCount()+"x "+ EntityDispatcher.classToKeyMap.get(task.getEntityClass()),x+28, y+8, 0xFFFFFFFF);
 
 		if(mouseX > x+3 && mouseX < x+21 && mouseY > y+3 && mouseY < y+21){
 
 			boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-			String tooltipText = tooltip.getTooltipText(item, ctrl);
-			tooltip.render(tooltipText,mouseX,mouseY,8,-8);
 		}
 	}
 

@@ -1,21 +1,19 @@
 package sunsetsatellite.vintagequesting.gui;
 
+import net.minecraft.client.entity.player.EntityOtherPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTooltip;
+import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.net.command.TextFormatting;
 import net.minecraft.core.sound.SoundCategory;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
-import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static sunsetsatellite.vintagequesting.VintageQuesting.CHAPTERS;
-import static sunsetsatellite.vintagequesting.VintageQuesting.currentChapter;
 
 public class GuiQuestbook extends GuiScreen {
 
@@ -25,13 +23,17 @@ public class GuiQuestbook extends GuiScreen {
 	protected int currentY = 0;
 	protected boolean isMouseButtonDown = false;
 	protected List<GuiQuestButton> currentQuests = new ArrayList<>();
+	protected Chapter currentChapter;
 	protected GuiTooltip tooltip;
 	private boolean init = false;
+	public final EntityPlayer player;
 
 
-	public GuiQuestbook(GuiScreen parent) {
+	public GuiQuestbook(EntityPlayer player, GuiScreen parent) {
 		super(parent);
-		if(currentChapter != null){
+		this.player = player;
+		if(((IHasQuests) player).getCurrentChapter() != null){
+			this.currentChapter = ((IHasQuests) player).getCurrentChapter();
 			loadChapter(currentChapter);
 		}
 
@@ -71,7 +73,9 @@ public class GuiQuestbook extends GuiScreen {
 		}
 
 
-		drawString(fontRenderer,String.format("WX: %d | WY: %d | CX: %d | CY: %d | WW: %d | WH: %d | Pressing: %b | CC: %s | CQ: %s",mouseX,mouseY, currentX, currentY,width,height,isMouseButtonDown, currentChapter != null ? currentChapter.getChapter().getTranslatedName() : "null", getQuestAtPosition(mouseX,mouseY) != null ? getQuestAtPosition(mouseX,mouseY).quest.getTranslatedName() : "null") ,2,2,0xFFFFFFFF);
+		if(mc.isDebugInfoEnabled()){
+			drawString(fontRenderer,String.format("WX: %d | WY: %d | CX: %d | CY: %d | WW: %d | WH: %d | Pressing: %b | CC: %s | CQ: %s",mouseX,mouseY, currentX, currentY,width,height,isMouseButtonDown, currentChapter != null ? currentChapter.getTranslatedName() : "null", getQuestAtPosition(mouseX,mouseY) != null ? getQuestAtPosition(mouseX,mouseY).quest.getTranslatedName() : "null") ,2,2,0xFFFFFFFF);
+		}
 
 		super.drawScreen(mouseX, mouseY, partialTick);
 	}
@@ -81,8 +85,8 @@ public class GuiQuestbook extends GuiScreen {
 		super.init();
 
 		int id = 0;
-		for (ChapterTemplate chapter : CHAPTERS) {
-			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter.getInstance(),24,24 + (id * 20),120,20);
+		for (Chapter chapter : ((IHasQuests) player).getQuestGroup().chapters) {
+			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter,24,24 + (id * 20),120,20);
 			controlList.add(chapterButton);
 			id++;
 		}
@@ -92,17 +96,18 @@ public class GuiQuestbook extends GuiScreen {
 	protected void buttonPressed(GuiButton button) {
 		super.buttonPressed(button);
 		if(button instanceof GuiChapterButton){
-			loadChapter((GuiChapterButton) button);
+			loadChapter(((GuiChapterButton) button).chapter);
 		} else if (button instanceof GuiQuestButton) {
 			mc.displayGuiScreen(new GuiQuestInfo(this,((GuiQuestButton) button).quest));
 		}
 	}
 
-	private void loadChapter(GuiChapterButton button){
+	private void loadChapter(Chapter chapter){
+		this.currentChapter = chapter;
 		currentQuests.clear();
-		currentChapter = button;
+		((IHasQuests) player).setCurrentChapter(chapter);
 		int id = 0;
-		for (Quest quest : currentChapter.chapter.getQuests()) {
+		for (Quest quest : chapter.getQuests()) {
 			GuiQuestButton questButton = new GuiQuestButton(this, id, quest);
 			currentQuests.add(questButton);
 		}

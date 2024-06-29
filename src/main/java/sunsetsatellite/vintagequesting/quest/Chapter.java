@@ -16,8 +16,10 @@ public class Chapter {
 	protected String name;
 	protected String description;
 	protected List<Quest> quests;
+	protected final ChapterTemplate template;
 
 	public Chapter(ChapterTemplate template) {
+		this.template = template;
 		this.icon = template.getIcon();
 		this.name = template.getName();
 		this.description = template.getDescription();
@@ -50,5 +52,9 @@ public class Chapter {
 
 	public List<Quest> getQuests() {
 		return quests;
+	}
+
+	public ChapterTemplate getTemplate() {
+		return template;
 	}
 }

@@ -4,24 +4,31 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.opengl.GL11;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.generic.GuiMessageBox;
 import sunsetsatellite.vintagequesting.gui.generic.GuiString;
 import sunsetsatellite.vintagequesting.gui.generic.GuiVerticalContainer;
 import sunsetsatellite.vintagequesting.gui.slot.reward.GuiItemRewardSlot;
 import sunsetsatellite.vintagequesting.gui.slot.task.GuiClickTaskSlot;
+import sunsetsatellite.vintagequesting.gui.slot.task.GuiCraftingTaskSlot;
 import sunsetsatellite.vintagequesting.gui.slot.task.GuiRetrievalTaskSlot;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
 import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.task.ClickTask;
+import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuiQuestInfo extends GuiScreen {
 
 	protected Quest quest;
+	protected GuiQuestbook parent;
 	protected GuiMessageBox messageBox;
 	protected GuiVerticalContainer rewardContainer;
 	protected GuiVerticalContainer taskContainer;
@@ -31,6 +38,7 @@ public class GuiQuestInfo extends GuiScreen {
 	public GuiQuestInfo(GuiQuestbook parent, Quest quest) {
 		super(parent);
 		this.quest = quest;
+		this.parent = parent;
 	}
 
 	@Override
@@ -74,13 +82,7 @@ public class GuiQuestInfo extends GuiScreen {
 		for (int i = 0; i < tasks.size(); i++) {
 			Task task = tasks.get(i);
 
-			if (task instanceof ClickTask) {
-				taskContainer.renderables.add(new GuiString(mc, (i+1)+". "+task.getTranslatedTypeName(), 0xFFFFFFFF));
-				taskContainer.renderables.add(new GuiClickTaskSlot(mc, width / 2 - 48, 20, true, (ClickTask) task));
-			} else if (task instanceof RetrievalTask) {
-				taskContainer.renderables.add(new GuiString(mc, (i+1)+". "+task.getTranslatedTypeName()+" | Consume: "+task.canConsume(), 0xFFFFFFFF));
-				taskContainer.renderables.add(new GuiRetrievalTaskSlot(mc, width / 2 - 48, 24, (RetrievalTask) task));
-			}
+			task.renderSlot(mc,taskContainer.renderables,i,width);
 		}
 
 		controlList.add(new GuiButton(0,width/2 - 30, height-24, 60, 20, "Back"));
@@ -115,11 +117,10 @@ public class GuiQuestInfo extends GuiScreen {
 		} else if (button == submitButton) {
 			for (Task task : quest.getTasks()) {
 				if(task instanceof RetrievalTask){
-					for (ItemStack stack : mc.thePlayer.inventory.mainInventory) {
-						int addedProgress = ((RetrievalTask) task).addProgress(stack);
-						if(addedProgress > 0 && task.canConsume()){
-							stack.stackSize -= addedProgress;
-						}
+					ArrayList<ItemStack> stacks = VintageQuesting.condenseItemList(Arrays.stream(mc.thePlayer.inventory.mainInventory).collect(Collectors.toList()));
+					((RetrievalTask) task).resetProgress();
+					for (ItemStack stack : stacks) {
+						((RetrievalTask) task).setProgress(stack,parent.player);
 					}
 				}
 			}

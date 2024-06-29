@@ -9,8 +9,9 @@ public class ItemRewardTemplate extends RewardTemplate {
 
 	protected ItemStack stack;
 
-	public ItemRewardTemplate(ItemStack stack){
-		this.stack = stack;
+	public ItemRewardTemplate(String id, ItemStack stack){
+        super(id);
+        this.stack = stack;
 	}
 
 	public ItemStack getStack() {

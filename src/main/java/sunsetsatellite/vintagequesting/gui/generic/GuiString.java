@@ -6,7 +6,7 @@ import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 
 public class GuiString extends Gui implements IRenderable {
 
-	private Minecraft mc;
+	private final Minecraft mc;
 	public String string;
 	public int argb;
 

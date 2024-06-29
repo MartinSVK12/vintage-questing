@@ -9,17 +9,18 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.gui.ItemRenderHelper;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
+import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
 
-public class GuiRetrievalTaskSlot extends Gui implements IRenderable {
+public class GuiCraftingTaskSlot extends Gui implements IRenderable {
 
 	public int width;
 	public int height;
 	private final Minecraft mc;
-	private final RetrievalTask task;
+	private final CraftingTask task;
 	private final GuiTooltip tooltip;
 
-	public GuiRetrievalTaskSlot(Minecraft mc, int width, int height, RetrievalTask task){
+	public GuiCraftingTaskSlot(Minecraft mc, int width, int height, CraftingTask task){
 		this.width = width;
         this.height = height;
 		this.mc = mc;

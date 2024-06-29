@@ -1,16 +1,18 @@
 package sunsetsatellite.vintagequesting.quest.template;
 
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Task;
 
 public abstract class TaskTemplate {
 
-	protected boolean canConsume;
-	protected boolean checkNbt;
-	protected String typeName;
+	protected final String typeName;
+	protected final String id;
 
-	public TaskTemplate(String typeName) {
+	public TaskTemplate(String id, String typeName) {
 		this.typeName = typeName;
+		this.id = id;
+		VintageQuesting.TASKS.register(id,this);
 	}
 
 	public String getTypeName() {
@@ -23,11 +25,9 @@ public abstract class TaskTemplate {
 
 	public abstract TaskTemplate copy();
 
-	public boolean canConsume() {
-		return canConsume;
-	}
-
-	public boolean checksNbt() {return checkNbt;}
-
 	public abstract Task getInstance();
+
+	public String getId() {
+		return id;
+	}
 }

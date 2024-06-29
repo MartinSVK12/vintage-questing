@@ -2,6 +2,7 @@ package sunsetsatellite.vintagequesting.quest.template;
 
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
 
@@ -9,16 +10,19 @@ import java.util.List;
 
 public class ChapterTemplate {
 
+	protected final String id;
 	protected IItemConvertible icon;
 	protected String name;
 	protected String description;
 	protected List<QuestTemplate> quests;
 
-	public ChapterTemplate(IItemConvertible icon, String name, String description, List<QuestTemplate> quests) {
+	public ChapterTemplate(String id, IItemConvertible icon, String name, String description, List<QuestTemplate> quests) {
+		this.id = id;
 		this.icon = icon;
 		this.name = name;
 		this.description = description;
 		this.quests = quests;
+		VintageQuesting.CHAPTERS.register(id,this);
 	}
 
 	public IItemConvertible getIcon() {
@@ -47,5 +51,9 @@ public class ChapterTemplate {
 
 	public Chapter getInstance(){
 		return new Chapter(this);
+	}
+
+	public String getId() {
+		return id;
 	}
 }

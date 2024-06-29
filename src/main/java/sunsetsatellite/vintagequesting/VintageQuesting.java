@@ -1,5 +1,7 @@
 package sunsetsatellite.vintagequesting;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.EntityPlayerSP;
@@ -10,6 +12,9 @@ import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.client.render.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.data.registry.recipe.adapter.ItemStackJsonAdapter;
+import net.minecraft.core.entity.monster.EntityGiant;
+import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.Container;
@@ -30,6 +35,12 @@ import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.task.ClickTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
 import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
+import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
+import sunsetsatellite.vintagequesting.quest.template.reward.ItemRewardTemplate;
+import sunsetsatellite.vintagequesting.quest.template.task.ClickTaskTemplate;
+import sunsetsatellite.vintagequesting.quest.template.task.CraftingTaskTemplate;
+import sunsetsatellite.vintagequesting.quest.template.task.KillTaskTemplate;
+import sunsetsatellite.vintagequesting.quest.template.task.RetrievalTaskTemplate;
 import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
 import sunsetsatellite.vintagequesting.registry.QuestRegistry;
 import sunsetsatellite.vintagequesting.registry.RewardRegistry;
@@ -47,7 +58,6 @@ import java.util.*;
 public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, GameStartEntrypoint, RecipeEntrypoint {
     public static final String MOD_ID = "vintagequesting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static GuiChapterButton currentChapter = null;
 
 	public static final ChapterRegistry CHAPTERS = new ChapterRegistry();
 	public static final QuestRegistry QUESTS = new QuestRegistry();
@@ -57,7 +67,7 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 	public static final RegisteredGui QUESTBOOK = new RegisteredGui(MOD_ID, "questbook", new GuiFactory() {
 		@Override
 		public @NotNull GuiScreen createGui(@NotNull RegisteredGui gui, @NotNull EntityPlayerSP player) {
-			return new GuiQuestbook(null);
+			return new GuiQuestbook(player,null);
 		}
 
 		@Override
@@ -83,8 +93,25 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		Registries.getInstance().register("vintagequesting:rewards", REWARDS);
         Registries.getInstance().register("vintagequesting:tasks", TASKS);
 
-		ChapterTemplate chapter = new ChapterTemplate(Block.dirt,"chapter.vq.test","chapter.vq.test",new ArrayList<>());
+		ItemRewardTemplate reward = new ItemRewardTemplate("vintagequesting:reward1",new ItemStack(Item.basket));
+		ClickTaskTemplate clickTask = new ClickTaskTemplate("vintagequesting:click1");
+		RetrievalTaskTemplate retrievalTask = new RetrievalTaskTemplate("vintagequesting:retrieval1",new ItemStack(Block.netherrackIgneous,32));
+		RetrievalTaskTemplate retrievalTask2 = new RetrievalTaskTemplate("vintagequesting:retrieval2",new ItemStack(Block.blockDiamond,16)).setConsume();
+		CraftingTaskTemplate craftingTask = new CraftingTaskTemplate("vintagequesting:crafting1",new ItemStack(Block.workbench,8));
+		KillTaskTemplate killTask = new KillTaskTemplate("vintagequesting:kill1", EntityGiant.class,4);
+		QuestTemplate quest = new QuestTemplate("vintagequesting:test","quest.vq.test","quest.vq.test",Block.netherrackIgneous,Logic.AND,Logic.AND).setTasks(listOf(clickTask,retrievalTask,retrievalTask2,craftingTask,killTask)).setRewards(listOf(reward));
+		ChapterTemplate chapter = new ChapterTemplate("vintagequesting:test",Block.dirt,"chapter.vq.test","chapter.vq.test",listOf(quest));
+
+
+		/*TASKS.register("vintagequesting:click1",clickTask);
+		TASKS.register("vintagequesting:retrieval1",retrievalTask);
+		TASKS.register("vintagequesting:retrieval2",retrievalTask2);
+		TASKS.register("vintagequesting:crafting1",craftingTask);
+		TASKS.register("vintagequesting:kill1",killTask);
+		REWARDS.register("vintagequesting:reward1",reward);
 		CHAPTERS.register("vintagequesting:test", chapter);
+		QUESTS.register("vintagequesting:test", quest);*/
+
 	}
 
 	@Override
@@ -140,5 +167,20 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 			list.add(Pair.of(first.get(i),second.get(i)));
 		}
 		return list;
+	}
+
+	public static ArrayList<ItemStack> condenseItemList(List<ItemStack> list) {
+		ArrayList<ItemStack> stacks = new ArrayList<>();
+		for (ItemStack stack : list) {
+			if (stack != null) {
+				Optional<ItemStack> existing = stacks.stream().filter((S) -> S.itemID == stack.itemID).findAny();
+				if (existing.isPresent()) {
+					existing.get().stackSize += stack.stackSize;
+				} else {
+					stacks.add(stack.copy());
+				}
+			}
+		}
+		return stacks;
 	}
 }

@@ -1,9 +1,11 @@
 package sunsetsatellite.vintagequesting.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.render.FontRenderer;
 import org.lwjgl.opengl.GL11;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 
 public class GuiChapterButton extends GuiButton {
@@ -21,6 +23,7 @@ public class GuiChapterButton extends GuiButton {
 
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		enabled = ((IHasQuests) Minecraft.getMinecraft(this).thePlayer).getCurrentChapter() != chapter;
 		if (this.visible) {
 			FontRenderer fontrenderer = mc.fontRenderer;
 			boolean mouseOver = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
@@ -42,7 +45,7 @@ public class GuiChapterButton extends GuiButton {
 					textColor = 16777120;
 			}
 
-			ItemRenderHelper.renderItemStack(chapter.getIcon().getDefaultStack(),this.xPosition - 16, this.yPosition, 1, 1, 1, 1);
+			ItemRenderHelper.renderItemStack(chapter.getIcon().getDefaultStack(),this.xPosition - 18, this.yPosition + 2, 1, 1, 1, 1);
 
 			GL11.glDisable(2896);
 			GL11.glDisable(2884);

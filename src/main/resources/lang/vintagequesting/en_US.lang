@@ -11,3 +11,7 @@ quest.vq.test2.name=Test Quest 2
 quest.vq.test2.desc=This is a second testing quest!
 type.task.vq.click.name=Click Task
 type.task.vq.retrieval.name=Retrieval Task
+type.task.vq.crafting.name=Crafting Task
+type.task.vq.kill.name=Kill Task
+
+gui.vq.quest.label.complete=Quest complete!

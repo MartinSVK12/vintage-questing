@@ -1,5 +1,6 @@
 package sunsetsatellite.vintagequesting.gui;
 
+import net.minecraft.client.entity.player.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.core.item.ItemStack;
@@ -12,6 +13,8 @@ import sunsetsatellite.vintagequesting.gui.slot.reward.GuiItemRewardSlot;
 import sunsetsatellite.vintagequesting.gui.slot.task.GuiClickTaskSlot;
 import sunsetsatellite.vintagequesting.gui.slot.task.GuiCraftingTaskSlot;
 import sunsetsatellite.vintagequesting.gui.slot.task.GuiRetrievalTaskSlot;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
+import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
@@ -113,12 +116,16 @@ public class GuiQuestInfo extends GuiScreen {
 				reward.give(mc.thePlayer);
 			}
 		} else if (button == submitButton) {
-			for (Task task : quest.getTasks()) {
-				if(task instanceof RetrievalTask){
-					ArrayList<ItemStack> stacks = VintageQuesting.condenseItemList(Arrays.stream(mc.thePlayer.inventory.mainInventory).collect(Collectors.toList()));
-					((RetrievalTask) task).resetProgress();
-					for (ItemStack stack : stacks) {
-						((RetrievalTask) task).setProgress(stack,parent.player);
+			ArrayList<ItemStack> stacks = VintageQuesting.condenseItemList(Arrays.stream(mc.thePlayer.inventory.mainInventory).collect(Collectors.toList()));
+			for (Chapter chapter : ((IHasQuests) mc.thePlayer).getQuestGroup().chapters) {
+				for (Quest chapterQuest : chapter.getQuests()) {
+					for (Task task : chapterQuest.getTasks()) {
+						if(task instanceof RetrievalTask){
+							((RetrievalTask) task).resetProgress();
+							for (ItemStack stack : stacks) {
+								((RetrievalTask) task).setProgress(stack,parent.player);
+							}
+						}
 					}
 				}
 			}
@@ -127,7 +134,12 @@ public class GuiQuestInfo extends GuiScreen {
 
 	@Override
 	public void tick() {
-		claimButton.enabled = quest.isCompleted() && !quest.areAllRewardsRedeemed();
+		claimButton.enabled = quest.isCompleted() && quest.preRequisitesCompleted() && !quest.areAllRewardsRedeemed();
+		if(!quest.preRequisitesCompleted()){
+			claimButton.displayString = "Prerequisites not completed!";
+		} else {
+			claimButton.displayString = "Claim";
+		}
 		submitButton.enabled = !quest.isCompleted();
 	}
 }

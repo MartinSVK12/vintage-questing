@@ -43,7 +43,7 @@ public class GuiKillTaskSlot extends Gui implements IRenderable {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		Lighting.disable();
 
-		drawString(mc.fontRenderer, task.getProgress()+" / "+task.getRequiredCount()+"x "+ EntityDispatcher.classToKeyMap.get(task.getEntityClass()),x+28, y+8, 0xFFFFFFFF);
+		drawString(mc.fontRenderer, task.getProgress()+" / "+task.getRequiredCount()+"x "+ EntityDispatcher.classToKeyMap.get(task.getEntityClass()) + " ("+task.getEntityClass().getSimpleName()+")",x+28, y+8, 0xFFFFFFFF);
 
 		if(mouseX > x+3 && mouseX < x+21 && mouseY > y+3 && mouseY < y+21){
 

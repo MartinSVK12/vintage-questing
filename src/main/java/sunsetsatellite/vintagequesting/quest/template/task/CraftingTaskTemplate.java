@@ -10,6 +10,7 @@ public class CraftingTaskTemplate extends TaskTemplate {
 	protected ItemStack requirement;
 	protected boolean canConsume;
 	protected boolean checkNbt;
+	protected Task cache;
 
 	public CraftingTaskTemplate(String id, ItemStack stack) {
 		super(id,"type.task.vq.crafting");
@@ -26,8 +27,13 @@ public class CraftingTaskTemplate extends TaskTemplate {
 	}
 
 	@Override
-	public Task getInstance() {
+	public Task getInstanceUnique() {
 		return new CraftingTask(this);
+	}
+
+	@Override
+	public Task getInstance() {
+		return cache == null ? cache = getInstanceUnique() : cache;
 	}
 
 	public CraftingTaskTemplate setConsume() {

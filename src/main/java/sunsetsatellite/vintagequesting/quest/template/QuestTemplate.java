@@ -29,6 +29,8 @@ public class QuestTemplate {
 	protected List<QuestTemplate> preRequisites = new ArrayList<>();
 	protected List<RewardTemplate> rewards = new ArrayList<>();
 
+	protected Quest cache;
+
 	public QuestTemplate(String id, String name, String description, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
 		this.id = id;
 		this.name = name;
@@ -187,6 +189,10 @@ public class QuestTemplate {
 	}
 
 	public Quest getInstance(){
+		return cache == null ? cache = getInstanceUnique() : cache;
+	}
+
+	public Quest getInstanceUnique(){
 		return new Quest(this);
 	}
 }

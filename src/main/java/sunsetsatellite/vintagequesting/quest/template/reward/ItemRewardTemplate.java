@@ -8,9 +8,11 @@ import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 public class ItemRewardTemplate extends RewardTemplate {
 
 	protected ItemStack stack;
+	protected Reward cache;
 
 	public ItemRewardTemplate(String id, ItemStack stack){
         super(id);
+
         this.stack = stack;
 	}
 
@@ -20,6 +22,11 @@ public class ItemRewardTemplate extends RewardTemplate {
 
 	@Override
 	public Reward getInstance() {
+		return cache == null ? cache = getInstanceUnique() : cache;
+	}
+
+	@Override
+	public Reward getInstanceUnique() {
 		return new ItemReward(this);
 	}
 }

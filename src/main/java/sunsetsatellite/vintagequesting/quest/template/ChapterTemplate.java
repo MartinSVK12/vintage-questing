@@ -16,6 +16,8 @@ public class ChapterTemplate {
 	protected String description;
 	protected List<QuestTemplate> quests;
 
+	protected Chapter cache;
+
 	public ChapterTemplate(String id, IItemConvertible icon, String name, String description, List<QuestTemplate> quests) {
 		this.id = id;
 		this.icon = icon;
@@ -50,6 +52,10 @@ public class ChapterTemplate {
 	}
 
 	public Chapter getInstance(){
+		return cache == null ? cache = getInstanceUnique() : cache;
+	}
+
+	public Chapter getInstanceUnique(){
 		return new Chapter(this);
 	}
 

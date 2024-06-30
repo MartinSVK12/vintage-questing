@@ -54,6 +54,14 @@ public class Chapter {
 		return quests;
 	}
 
+	public long numberOfCompletedQuests(){
+		return quests.stream().filter(Quest::isCompleted).count();
+	}
+
+	public boolean areAllQuestsCompleted(){
+		return quests.stream().allMatch(Quest::isCompleted);
+	}
+
 	public ChapterTemplate getTemplate() {
 		return template;
 	}

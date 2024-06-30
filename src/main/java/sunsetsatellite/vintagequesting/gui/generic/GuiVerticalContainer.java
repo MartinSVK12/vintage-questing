@@ -19,9 +19,9 @@ public class GuiVerticalContainer
     private final Minecraft mc;
     private float scrollAmount = 0;
     public final List<IRenderable> renderables = new ArrayList<>();
-    private final int height;
+    private int height;
 
-	private final int width;
+	private int width;
     private int scrollbarX;
     private int scrollbarY;
     private int scrollbarWidth;
@@ -45,6 +45,16 @@ public class GuiVerticalContainer
     {
         return height;
     }
+
+	public GuiVerticalContainer setHeight(int height) {
+		this.height = height;
+		return this;
+	}
+
+	public GuiVerticalContainer setWidth(int width) {
+		this.width = width;
+		return this;
+	}
 
 	public int getWidth() {
 		return width;
@@ -99,7 +109,11 @@ public class GuiVerticalContainer
 
     private int getScrollableHeight()
     {
-        return Math.max(20 * renderables.size(),height);
+		int elementHeight = 0;
+		for (IRenderable renderable : renderables) {
+			elementHeight += renderable.getHeight() + elementSpacing;
+		}
+        return Math.max(elementHeight + elementSpacing,height);
     }
 
 

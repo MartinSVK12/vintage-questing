@@ -9,7 +9,10 @@ import net.minecraft.core.net.command.TextFormatting;
 import net.minecraft.core.sound.SoundCategory;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import sunsetsatellite.vintagequesting.gui.generic.GuiMessageBox;
+import sunsetsatellite.vintagequesting.gui.generic.GuiVerticalContainer;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
+import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import java.util.ArrayList;
@@ -27,6 +30,11 @@ public class GuiQuestbook extends GuiScreen {
 	protected GuiTooltip tooltip;
 	private boolean init = false;
 	public final EntityPlayer player;
+	protected GuiVerticalContainer chapterContainer;
+	protected GuiMessageBox descriptionBox;
+	protected GuiButton descButton;
+	protected GuiButton closeButton;
+	protected boolean showDesc;
 
 
 	public GuiQuestbook(EntityPlayer player, GuiScreen parent) {
@@ -42,15 +50,21 @@ public class GuiQuestbook extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTick) {
 
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		drawRectWidthHeight(0,0,width,height,0xFF808080);
 		GL11.glEnable(3553);
+		GL11.glDisable(GL11.GL_BLEND);
 
 		if(currentChapter != null) {
 			drawChapter(mouseX, mouseY, partialTick);
 		}
 
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		drawRectWidthHeight(0,0,160,height,0xFF404040);
 		GL11.glEnable(3553);
+		GL11.glDisable(GL11.GL_BLEND);
 
 		if(Mouse.isButtonDown(2)){
 			currentX = 0;
@@ -77,6 +91,20 @@ public class GuiQuestbook extends GuiScreen {
 			drawString(fontRenderer,String.format("WX: %d | WY: %d | CX: %d | CY: %d | WW: %d | WH: %d | Pressing: %b | CC: %s | CQ: %s",mouseX,mouseY, currentX, currentY,width,height,isMouseButtonDown, currentChapter != null ? currentChapter.getTranslatedName() : "null", getQuestAtPosition(mouseX,mouseY) != null ? getQuestAtPosition(mouseX,mouseY).quest.getTranslatedName() : "null") ,2,2,0xFFFFFFFF);
 		}
 
+		drawString(fontRenderer,"Questbook",48,12,0xFFFFFFFF);
+
+		if(currentChapter != null){
+			drawString(fontRenderer,String.format("%d / %d completed.",currentChapter.numberOfCompletedQuests(),currentChapter.getQuests().size()),168,10,0xFFFFFFFF);
+		}
+
+		if(showDesc){
+			chapterContainer.setHeight((height - 48)/2);
+			descriptionBox.render(0,((height - 48)/2) + 24,mouseX,mouseY);
+		} else {
+			chapterContainer.setHeight(height - 48);
+		}
+		chapterContainer.render(0,24,mouseX,mouseY);
+
 		super.drawScreen(mouseX, mouseY, partialTick);
 	}
 
@@ -84,10 +112,26 @@ public class GuiQuestbook extends GuiScreen {
 	public void init() {
 		super.init();
 
+		chapterContainer = new GuiVerticalContainer(160,height - 48,4);
+		String s = "No description available.\n\nMaybe try selecting a\nchapter?";
+		descriptionBox = new GuiMessageBox(160,((height - 48)/2) - 2,s,160 / fontRenderer.getCharWidth('m'));
+
+		descButton = new GuiButton(0,8,height - 24,20,20,"D");
+		controlList.add(descButton);
+
+		for (int i = 1; i <= 4; i++) {
+			GuiButton yetUnusedButton = new GuiButton(i,(i * 20) + 8 + (i * 8),height - 24,20,20,"?");
+			yetUnusedButton.enabled = false;
+			controlList.add(yetUnusedButton);
+		}
+
+		closeButton = new GuiButton(5,width - 24,4,20,20,"X");
+		controlList.add(closeButton);
+
 		int id = 0;
 		for (Chapter chapter : ((IHasQuests) player).getQuestGroup().chapters) {
 			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter,24,24 + (id * 20),120,20);
-			controlList.add(chapterButton);
+			chapterContainer.renderables.add(chapterButton);
 			id++;
 		}
 	}
@@ -95,6 +139,16 @@ public class GuiQuestbook extends GuiScreen {
 	@Override
 	protected void buttonPressed(GuiButton button) {
 		super.buttonPressed(button);
+		if(button == descButton){
+			showDesc = !showDesc;
+		}
+		if(button == closeButton){
+			if(getParentScreen() != null){
+				mc.displayGuiScreen(getParentScreen());
+			} else {
+				mc.displayGuiScreen(null);
+			}
+		}
 		if(button instanceof GuiChapterButton){
 			loadChapter(((GuiChapterButton) button).chapter);
 		} else if (button instanceof GuiQuestButton) {
@@ -110,6 +164,10 @@ public class GuiQuestbook extends GuiScreen {
 		for (Quest quest : chapter.getQuests()) {
 			GuiQuestButton questButton = new GuiQuestButton(this, id, quest);
 			currentQuests.add(questButton);
+		}
+		if(currentChapter != null && descriptionBox != null){
+			String s = currentChapter.getTranslatedDescription();
+			descriptionBox.setText(s);
 		}
 	}
 
@@ -172,6 +230,20 @@ public class GuiQuestbook extends GuiScreen {
 	{
 		if(mouseButton == 0)
 		{
+			for (IRenderable renderable : chapterContainer.renderables) {
+				GuiButton guiButton = (GuiButton) renderable;
+				if (guiButton.mouseClicked(mc, mouseX, mouseY) && guiButton.playSound) {
+					selectedButton = guiButton;
+					mc.sndManager.playSound("random.click", SoundCategory.GUI_SOUNDS, 1.0F, 1.0F);
+					if (guiButton.listener != null) {
+						guiButton.listener.listen(guiButton);
+					} else {
+						buttonPressed(guiButton);
+					}
+					return;
+				}
+			}
+
 			for (GuiButton guiButton : controlList) {
 				if (guiButton.mouseClicked(mc, mouseX, mouseY) && guiButton.playSound) {
 					selectedButton = guiButton;

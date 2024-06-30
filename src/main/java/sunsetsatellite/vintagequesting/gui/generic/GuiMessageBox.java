@@ -19,6 +19,8 @@ public class GuiMessageBox
     private float scrollAmount = 0;
     private final List<String> lines = new ArrayList<>();
     private final int height;
+	private String text;
+	private int chars;
 
 	private final int width;
     private int scrollbarX;
@@ -36,38 +38,46 @@ public class GuiMessageBox
         this.minecraft = Minecraft.getMinecraft(this);
         this.height = height;
 
-        String currentFormat = TextFormatting.WHITE.toString();
+		this.chars = chars;
 
-        String[] newlines = text.split("\\n",Integer.MAX_VALUE);
+		setupText(text, chars);
+	}
 
-        List<String> split = new ArrayList<>();
+	private void setupText(String text, int chars) {
+		lines.clear();
 
-        for (String newline : newlines) {
-            if(newline.isEmpty()){
-                split.add("");
-                continue;
-            }
-            String nextFormat = currentFormat;
-            int start = 0;
-            while (start < newline.length()) {
-                String s = newline.substring(start, Math.min(newline.length(), start + chars));
-                char[] charArray = s.toCharArray();
-                for (int i = 0; i < charArray.length; i++) {
-                    char c = charArray[i];
-                    if (c == '\247' && i + 1 < s.length()) {
-                        nextFormat = "§"+charArray[i+1];
-                    }
-                }
-                split.add(currentFormat+s);
-                start += chars;
-                currentFormat = nextFormat;
-            }
-        }
+		String currentFormat = TextFormatting.WHITE.toString();
 
-        lines.addAll(split);
-    }
+		String[] newlines = text.split("\\n",Integer.MAX_VALUE);
 
-    public int getHeight()
+		List<String> split = new ArrayList<>();
+
+		for (String newline : newlines) {
+			if(newline.isEmpty()){
+				split.add("");
+				continue;
+			}
+			String nextFormat = currentFormat;
+			int start = 0;
+			while (start < newline.length()) {
+				String s = newline.substring(start, Math.min(newline.length(), start + chars));
+				char[] charArray = s.toCharArray();
+				for (int i = 0; i < charArray.length; i++) {
+					char c = charArray[i];
+					if (c == '\247' && i + 1 < s.length()) {
+						nextFormat = "§"+charArray[i+1];
+					}
+				}
+				split.add(currentFormat+s);
+				start += chars;
+				currentFormat = nextFormat;
+			}
+		}
+
+		lines.addAll(split);
+	}
+
+	public int getHeight()
     {
         return height;
     }
@@ -81,7 +91,14 @@ public class GuiMessageBox
         scrollAmount = MathHelper.clamp(scrollAmount + amount, 0.0f, 1.0f);
     }
 
-    public void render(int x, int y, int mouseX, int mouseY)
+
+	public GuiMessageBox setText(String text) {
+		this.text = text;
+		setupText(text,chars);
+		return this;
+	}
+
+	public void render(int x, int y, int mouseX, int mouseY)
     {
 
         // Do scroll

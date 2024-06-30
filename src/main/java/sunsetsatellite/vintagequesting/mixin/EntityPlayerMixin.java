@@ -26,6 +26,7 @@ import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 import sunsetsatellite.vintagequesting.util.QuestGroup;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @Mixin(value = EntityPlayer.class,remap = false)
@@ -155,6 +156,12 @@ public class EntityPlayerMixin implements IHasQuests {
 					VintageQuesting.LOGGER.info("Loaded saved data for chapter with id: "+id);
 				} else {
 					VintageQuesting.LOGGER.error("No chapter with id: "+id);
+				}
+			});
+			VintageQuesting.CHAPTERS.forEach((C)->{
+				if(questGroup.chapters.stream().noneMatch((QC)-> Objects.equals(QC.getTemplate().getId(), C.getId()))){
+					VintageQuesting.LOGGER.warn("Adding missing chapter with id: "+C.getId());
+					questGroup.chapters.add(C.getInstance());
 				}
 			});
 		} else {

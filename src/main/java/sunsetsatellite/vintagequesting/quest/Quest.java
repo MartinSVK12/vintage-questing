@@ -213,6 +213,7 @@ public class Quest {
 	}
 
 	public boolean isCompleted(){
+		if(!preRequisitesCompleted()) return false;
 		switch (taskLogic){
 			case AND:
 				if (tasks.stream().allMatch(Task::isCompleted)){

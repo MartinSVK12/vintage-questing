@@ -12,6 +12,8 @@ public class KillTaskTemplate extends TaskTemplate{
 	protected Class<? extends Entity> requiredClass;
 	protected int requiredCount;
 
+	protected Task cache;
+
 	public KillTaskTemplate(String id, Class<? extends Entity> required, int amount) {
 		super(id,"type.task.vq.kill");
 		this.requiredClass = required;
@@ -32,8 +34,13 @@ public class KillTaskTemplate extends TaskTemplate{
 	}
 
 	@Override
-	public Task getInstance() {
+	public Task getInstanceUnique() {
 		return new KillTask(this);
+	}
+
+	@Override
+	public Task getInstance() {
+		return cache == null ? cache = getInstanceUnique() : cache;
 	}
 
 }

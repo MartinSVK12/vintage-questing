@@ -27,6 +27,8 @@ public abstract class TaskTemplate {
 
 	public abstract Task getInstance();
 
+	public abstract Task getInstanceUnique();
+
 	public String getId() {
 		return id;
 	}

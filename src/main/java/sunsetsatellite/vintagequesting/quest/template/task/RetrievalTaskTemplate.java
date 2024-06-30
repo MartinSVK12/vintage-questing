@@ -7,6 +7,7 @@ import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
 public class RetrievalTaskTemplate extends TaskTemplate {
 
+	protected Task cache;
 	protected ItemStack requirement;
 	protected boolean canConsume;
 	protected boolean checkNbt;
@@ -26,8 +27,13 @@ public class RetrievalTaskTemplate extends TaskTemplate {
 	}
 
 	@Override
-	public Task getInstance() {
+	public Task getInstanceUnique() {
 		return new RetrievalTask(this);
+	}
+
+	@Override
+	public Task getInstance() {
+		return cache == null ? cache = getInstanceUnique() : cache;
 	}
 
 	public RetrievalTaskTemplate setConsume() {

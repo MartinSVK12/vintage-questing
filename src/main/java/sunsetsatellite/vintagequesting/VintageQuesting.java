@@ -101,17 +101,6 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		KillTaskTemplate killTask = new KillTaskTemplate("vintagequesting:kill1", EntityGiant.class,4);
 		QuestTemplate quest = new QuestTemplate("vintagequesting:test","quest.vq.test","quest.vq.test",Block.netherrackIgneous,Logic.AND,Logic.AND).setTasks(listOf(clickTask,retrievalTask,retrievalTask2,craftingTask,killTask)).setRewards(listOf(reward));
 		ChapterTemplate chapter = new ChapterTemplate("vintagequesting:test",Block.dirt,"chapter.vq.test","chapter.vq.test",listOf(quest));
-
-
-		/*TASKS.register("vintagequesting:click1",clickTask);
-		TASKS.register("vintagequesting:retrieval1",retrievalTask);
-		TASKS.register("vintagequesting:retrieval2",retrievalTask2);
-		TASKS.register("vintagequesting:crafting1",craftingTask);
-		TASKS.register("vintagequesting:kill1",killTask);
-		REWARDS.register("vintagequesting:reward1",reward);
-		CHAPTERS.register("vintagequesting:test", chapter);
-		QUESTS.register("vintagequesting:test", quest);*/
-
 	}
 
 	@Override

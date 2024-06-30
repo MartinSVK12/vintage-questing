@@ -1,8 +1,12 @@
 package sunsetsatellite.vintagequesting.quest;
 
 import com.mojang.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.EntityPlayer;
+import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
+
+import java.util.List;
 
 public abstract class Reward {
 
@@ -31,4 +35,6 @@ public abstract class Reward {
 	public void writeToNbt(CompoundTag nbt){
 		nbt.putBoolean("Redeemed", redeemed);
 	};
+
+	public abstract void renderSlot(Minecraft mc, List<IRenderable> renderables, int width);
 }

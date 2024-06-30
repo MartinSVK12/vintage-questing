@@ -1,10 +1,15 @@
 package sunsetsatellite.vintagequesting.quest.reward;
 
 import com.mojang.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
+import sunsetsatellite.vintagequesting.gui.slot.reward.GuiItemRewardSlot;
+import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.template.reward.ItemRewardTemplate;
+
+import java.util.List;
 
 public class ItemReward extends Reward {
 
@@ -39,5 +44,10 @@ public class ItemReward extends Reward {
 	@Override
 	public void writeToNbt(CompoundTag nbt) {
 		super.writeToNbt(nbt);
+	}
+
+	@Override
+	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int width) {
+		renderables.add(new GuiItemRewardSlot(mc,width / 2 - 38,24, this));
 	}
 }

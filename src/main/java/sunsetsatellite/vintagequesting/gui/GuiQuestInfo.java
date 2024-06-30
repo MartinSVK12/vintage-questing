@@ -53,7 +53,7 @@ public class GuiQuestInfo extends GuiScreen {
 		if(quest.getRewards().isEmpty()){
 			drawStringCentered(fontRenderer,"No rewards :(",width / 4,height / 2 + 24,0xFF808080);
 		}
-		drawStringCentered(fontRenderer,"Tasks:",width - (width / 4) ,24,0xFFFFFFFF);
+		drawStringCentered(fontRenderer,"Tasks:",width - (width / 4) - 8 ,24,0xFFFFFFFF);
 		if(quest.getTasks().isEmpty()){
 			drawStringCentered(fontRenderer,"No tasks.",width - (width / 4) ,48,0xFF808080);
 		}
@@ -74,9 +74,7 @@ public class GuiQuestInfo extends GuiScreen {
 		rewardContainer = new GuiVerticalContainer(width / 2 - 24,height / 3,8);
 		taskContainer = new GuiVerticalContainer(width / 2 - 24,height - (48*2) + 3,8);
 		for (Reward reward : quest.getRewards()) {
-			if(reward instanceof ItemReward){
-				rewardContainer.renderables.add(new GuiItemRewardSlot(mc,width / 2 - 38,24, (ItemReward) reward));
-			}
+			reward.renderSlot(mc,rewardContainer.renderables,width);
 		}
 		List<Task> tasks = quest.getTasks();
 		for (int i = 0; i < tasks.size(); i++) {

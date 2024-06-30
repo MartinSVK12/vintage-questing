@@ -58,7 +58,7 @@ import turniplabs.halplibe.util.RecipeEntrypoint;
 import java.util.*;
 
 
-public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, GameStartEntrypoint, RecipeEntrypoint {
+public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, GameStartEntrypoint {
     public static final String MOD_ID = "vintagequesting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -81,7 +81,7 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Vintage Questing initialized.");
+
     }
 
 	@Override
@@ -95,17 +95,7 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		Registries.getInstance().register("vintagequesting:quests",QUESTS);
 		Registries.getInstance().register("vintagequesting:rewards", REWARDS);
         Registries.getInstance().register("vintagequesting:tasks", TASKS);
-
-	}
-
-	@Override
-	public void onRecipesReady() {
-
-	}
-
-	@Override
-	public void initNamespaces() {
-
+		LOGGER.info("Vintage Questing initialized.");
 	}
 
 	@Override

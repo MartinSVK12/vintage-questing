@@ -1,3 +1,4 @@
+In `afterGameStart` method in your mods main class:
 ```java
 ItemRewardTemplate reward = new ItemRewardTemplate("vintagequesting:reward1",new ItemStack(Item.basket));
 ClickTaskTemplate clickTask = new ClickTaskTemplate("vintagequesting:click1");
@@ -20,4 +21,15 @@ QuestTemplate quest2 = new QuestTemplate("vintagequesting:test2","quest.vq.test2
     .setPreRequisites(listOf(quest))
     .setX(64);
 ChapterTemplate chapter2 = new ChapterTemplate("vintagequesting:test2",Block.blockDiamond,"chapter.vq.test2","chapter.vq.test2",listOf(quest,quest2));
+```
+In your `.lang` file:
+```mclang
+chapter.vq.test.name=Test Chapter
+chapter.vq.test.desc=This is a description for a quest chapter!
+quest.vq.test.name=Test Quest
+quest.vq.test.desc=This is a testing quest!
+chapter.vq.test2.name=Test Chapter 2
+chapter.vq.test2.desc=This is a description for a second quest chapter!
+quest.vq.test2.name=Test Quest 2
+quest.vq.test2.desc=This is a second testing quest!
 ```

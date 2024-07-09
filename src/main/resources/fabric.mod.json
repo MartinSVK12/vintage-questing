@@ -32,9 +32,6 @@
 		],
 		"afterClientStart": [
 			"sunsetsatellite.vintagequesting.VintageQuesting"
-		],
-		"recipesReady": [
-			"sunsetsatellite.vintagequesting.VintageQuesting"
 		]
 	},
   "mixins": [

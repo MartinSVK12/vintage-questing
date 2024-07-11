@@ -11,24 +11,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.vintagequesting.VintageQuesting;
-import sunsetsatellite.vintagequesting.gui.GuiChapterButton;
-import sunsetsatellite.vintagequesting.gui.GuiQuestButton;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
-import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.task.KillTask;
 import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
-import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
-import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 import sunsetsatellite.vintagequesting.util.QuestGroup;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
+@SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(value = EntityPlayer.class,remap = false)
 public class EntityPlayerMixin implements IHasQuests {
 	@Unique
@@ -55,61 +50,9 @@ public class EntityPlayerMixin implements IHasQuests {
 		return currentChapter;
 	}
 
-	@Inject(method = "awardKillScore", at = @At("HEAD"))
-	public void awardKillScore(Entity entity, int i, CallbackInfo ci) {
-		for (Chapter chapter : questGroup.chapters) {
-			for (Quest quest : chapter.getQuests()) {
-				for (Task task : quest.getTasks()) {
-					if(task instanceof KillTask){
-						((KillTask) task).addProgress(entity.getClass());
-					}
-				}
-				quest.isCompleted();
-			}
-		}
-	}
-
-	@Inject(method = "<init>", at = @At("TAIL"))
-	public void init(World world, CallbackInfo ci){
-		VintageQuesting.LOGGER.info("Initializing quests...");
-		questGroup.chapters.clear();
-		for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
-			questGroup.chapters.add(chapter.getInstance());
-		}
-	}
-
-	@Inject(method = "addAdditionalSaveData",at = @At("TAIL"))
-	public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-		CompoundTag chaptersTag = new CompoundTag();
-		if(questGroup.chapters.isEmpty()) return;
-		for (Chapter chapter : questGroup.chapters) {
-			CompoundTag chapterTag = new CompoundTag();
-			for (Quest quest : chapter.getQuests()) {
-				CompoundTag questTag = new CompoundTag();
-				CompoundTag tasksTag = new CompoundTag();
-				CompoundTag rewardsTag = new CompoundTag();
-				questTag.putCompound("Tasks",tasksTag);
-				questTag.putCompound("Rewards",rewardsTag);
-				quest.writeToNbt(questTag);
-				for (Task task : quest.getTasks()) {
-					CompoundTag taskTag = new CompoundTag();
-					task.writeToNbt(taskTag);
-					tasksTag.putCompound(task.getTemplate().getId(),taskTag);
-				}
-				for (Reward reward : quest.getRewards()) {
-					CompoundTag rewardTag = new CompoundTag();
-					reward.writeToNbt(rewardTag);
-					rewardsTag.putCompound(reward.getTemplate().getId(),rewardTag);
-				}
-				chapterTag.putCompound(quest.getTemplate().getId(),questTag);
-			}
-			chaptersTag.put(chapter.getTemplate().getId(), chapterTag);
-		}
-		tag.putCompound("QuestingChapters", chaptersTag);
-	}
-
-	@Inject(method = "readAdditionalSaveData",at = @At("TAIL"))
-	public void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+	@Override
+	public void loadData(CompoundTag tag) {
+		VintageQuesting.playerData = tag;
 		questGroup.chapters.clear();
 		CompoundTag chapters = tag.getCompoundOrDefault("QuestingChapters", null);
 		if(chapters != null) {
@@ -170,5 +113,63 @@ public class EntityPlayerMixin implements IHasQuests {
 				questGroup.chapters.add(chapter.getInstance());
 			}
 		}
+	}
+
+	@Inject(method = "awardKillScore", at = @At("HEAD"))
+	public void awardKillScore(Entity entity, int i, CallbackInfo ci) {
+		for (Chapter chapter : questGroup.chapters) {
+			for (Quest quest : chapter.getQuests()) {
+				for (Task task : quest.getTasks()) {
+					if(task instanceof KillTask){
+						((KillTask) task).addProgress(entity.getClass());
+					}
+				}
+				quest.isCompleted();
+			}
+		}
+	}
+
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void init(World world, CallbackInfo ci){
+		VintageQuesting.LOGGER.info("Initializing quests...");
+		questGroup.chapters.clear();
+		for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
+			questGroup.chapters.add(chapter.getInstance());
+		}
+	}
+
+	@Inject(method = "addAdditionalSaveData",at = @At("TAIL"))
+	public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+		CompoundTag chaptersTag = new CompoundTag();
+		if(questGroup.chapters.isEmpty()) return;
+		for (Chapter chapter : questGroup.chapters) {
+			CompoundTag chapterTag = new CompoundTag();
+			for (Quest quest : chapter.getQuests()) {
+				CompoundTag questTag = new CompoundTag();
+				CompoundTag tasksTag = new CompoundTag();
+				CompoundTag rewardsTag = new CompoundTag();
+				questTag.putCompound("Tasks",tasksTag);
+				questTag.putCompound("Rewards",rewardsTag);
+				quest.writeToNbt(questTag);
+				for (Task task : quest.getTasks()) {
+					CompoundTag taskTag = new CompoundTag();
+					task.writeToNbt(taskTag);
+					tasksTag.putCompound(task.getTemplate().getId(),taskTag);
+				}
+				for (Reward reward : quest.getRewards()) {
+					CompoundTag rewardTag = new CompoundTag();
+					reward.writeToNbt(rewardTag);
+					rewardsTag.putCompound(reward.getTemplate().getId(),rewardTag);
+				}
+				chapterTag.putCompound(quest.getTemplate().getId(),questTag);
+			}
+			chaptersTag.put(chapter.getTemplate().getId(), chapterTag);
+		}
+		tag.putCompound("QuestingChapters", chaptersTag);
+	}
+
+	@Inject(method = "readAdditionalSaveData",at = @At("TAIL"))
+	public void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+		loadData(tag);
 	}
 }

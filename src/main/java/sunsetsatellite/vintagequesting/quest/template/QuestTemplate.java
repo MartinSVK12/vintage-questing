@@ -4,8 +4,6 @@ import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Quest;
-import sunsetsatellite.vintagequesting.quest.Reward;
-import sunsetsatellite.vintagequesting.quest.Task;
 import sunsetsatellite.vintagequesting.util.Logic;
 
 import java.util.ArrayList;
@@ -35,6 +33,16 @@ public class QuestTemplate {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.icon = icon;
+		this.questLogic = questLogic;
+		this.taskLogic = taskLogic;
+		VintageQuesting.QUESTS.register(id,this);
+	}
+
+	public QuestTemplate(String id, String langId, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
+		this.id = id;
+		this.name = langId;
+		this.description = langId;
 		this.icon = icon;
 		this.questLogic = questLogic;
 		this.taskLogic = taskLogic;
@@ -72,12 +80,22 @@ public class QuestTemplate {
 		return this;
 	}
 
+	public QuestTemplate setX(QuestTemplate quest, int offset) {
+		this.x = quest.getX() + offset;
+		return this;
+	}
+
 	public int getY() {
 		return y;
 	}
 
 	public QuestTemplate setY(int y) {
 		this.y = y;
+		return this;
+	}
+
+	public QuestTemplate setY(QuestTemplate quest, int offset) {
+		this.y = quest.getY() + offset;
 		return this;
 	}
 

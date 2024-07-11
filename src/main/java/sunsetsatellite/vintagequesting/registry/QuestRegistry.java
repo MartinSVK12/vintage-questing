@@ -1,7 +1,6 @@
 package sunsetsatellite.vintagequesting.registry;
 
 import net.minecraft.core.data.registry.Registry;
-import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
 import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
 
 import java.util.Objects;

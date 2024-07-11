@@ -1,12 +1,12 @@
 package sunsetsatellite.vintagequesting.gui;
 
-import net.minecraft.client.entity.player.EntityOtherPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTooltip;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.net.command.TextFormatting;
 import net.minecraft.core.sound.SoundCategory;
+import net.minecraft.core.util.helper.MathHelper;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.gui.generic.GuiMessageBox;
@@ -15,8 +15,11 @@ import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuiQuestbook extends GuiScreen {
 
@@ -35,7 +38,7 @@ public class GuiQuestbook extends GuiScreen {
 	protected GuiButton descButton;
 	protected GuiButton closeButton;
 	protected boolean showDesc;
-
+	protected float zoom = 0.5f;
 
 	public GuiQuestbook(EntityPlayer player, GuiScreen parent) {
 		super(parent);
@@ -49,6 +52,9 @@ public class GuiQuestbook extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTick) {
+
+		int scroll = Mouse.getDWheel();
+		zoom = MathHelper.clamp(scroll != 0 ? zoom + scroll / 120f : zoom, 0.5f,1f);
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -88,7 +94,7 @@ public class GuiQuestbook extends GuiScreen {
 
 
 		if(mc.isDebugInfoEnabled()){
-			drawString(fontRenderer,String.format("WX: %d | WY: %d | CX: %d | CY: %d | WW: %d | WH: %d | Pressing: %b | CC: %s | CQ: %s",mouseX,mouseY, currentX, currentY,width,height,isMouseButtonDown, currentChapter != null ? currentChapter.getTranslatedName() : "null", getQuestAtPosition(mouseX,mouseY) != null ? getQuestAtPosition(mouseX,mouseY).quest.getTranslatedName() : "null") ,2,2,0xFFFFFFFF);
+			drawString(fontRenderer,String.format("WX: %d | WY: %d | Z: %f | CX: %d | CY: %d | WW: %d | WH: %d | P: %b | CC: %s | CQ: %s",mouseX,mouseY, zoom, currentX, currentY,width,height,isMouseButtonDown, currentChapter != null ? currentChapter.getTranslatedName() : "null", getQuestAtPosition(mouseX,mouseY) != null ? getQuestAtPosition(mouseX,mouseY).quest.getTranslatedName() : "null") ,2,2,0xFFFFFFFF);
 		}
 
 		drawString(fontRenderer,"Questbook",48,12,0xFFFFFFFF);
@@ -129,7 +135,8 @@ public class GuiQuestbook extends GuiScreen {
 		controlList.add(closeButton);
 
 		int id = 0;
-		for (Chapter chapter : ((IHasQuests) player).getQuestGroup().chapters) {
+		List<Chapter> sortedChapters = ((IHasQuests) player).getQuestGroup().chapters.stream().sorted(Comparator.comparingInt(C -> C.getTemplate().getOrder())).collect(Collectors.toList());
+		for (Chapter chapter : sortedChapters) {
 			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter,24,24 + (id * 20),120,20);
 			chapterContainer.renderables.add(chapterButton);
 			id++;
@@ -175,12 +182,15 @@ public class GuiQuestbook extends GuiScreen {
 		if(tooltip == null){
 			tooltip = new GuiTooltip(mc);
 		}
+		GL11.glPushMatrix();
+		GL11.glScalef(zoom,zoom,1);
 		for (GuiQuestButton questButton : currentQuests) {
 			Quest quest = questButton.getQuest();
 			if(!quest.getPreRequisites().isEmpty()){
 				int x = (quest.getX()+(quest.getWidth()/2))+currentX;
 				int y = (quest.getY()+(quest.getHeight()/2))+currentY;
 				for (Quest preRequisite : quest.getPreRequisites()) {
+					if(!currentChapter.getQuests().contains(preRequisite)) continue;
 					int x2 = (preRequisite.getX()+(preRequisite.getWidth()/2))+currentX;
 					int y2 = (preRequisite.getY()+(preRequisite.getHeight()/2))+currentY;
 
@@ -198,6 +208,7 @@ public class GuiQuestbook extends GuiScreen {
 		for (GuiQuestButton quest : currentQuests) {
 			quest.drawButton(mc,mouseX,mouseY);
 		}
+		GL11.glPopMatrix();
 		GuiQuestButton questButton;
 		if((questButton = getQuestAtPosition(mouseX,mouseY)) != null){
 			Quest quest = questButton.getQuest();
@@ -285,10 +296,10 @@ public class GuiQuestbook extends GuiScreen {
 
 	public boolean getIsMouseOverQuest(GuiQuestButton quest, int mouseX, int mouseY) {
 
-		int questX = quest.xPosition+currentX;
-		int questY = quest.yPosition+currentY;
+		int questX = (int) ((quest.xPosition * zoom)+(currentX * zoom));
+		int questY = (int) ((quest.yPosition * zoom)+(currentY * zoom));
 
-		return mouseX >= questX - 1 && mouseX < questX + quest.getWidth() + 1 && mouseY >= questY - 1 && mouseY < questY + quest.getHeight() + 1;
+		return mouseX >= questX - 1 && mouseX < questX + (quest.getWidth() * zoom) + 1 && mouseY >= questY - 1 && mouseY < questY + (quest.getHeight() * zoom) + 1;
 	}
 
 	public GuiQuestButton getQuestAtPosition(int mouseX, int mouseY) {

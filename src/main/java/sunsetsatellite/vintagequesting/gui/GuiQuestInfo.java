@@ -1,26 +1,17 @@
 package sunsetsatellite.vintagequesting.gui;
 
-import net.minecraft.client.entity.player.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.generic.GuiMessageBox;
-import sunsetsatellite.vintagequesting.gui.generic.GuiString;
 import sunsetsatellite.vintagequesting.gui.generic.GuiVerticalContainer;
-import sunsetsatellite.vintagequesting.gui.slot.reward.GuiItemRewardSlot;
-import sunsetsatellite.vintagequesting.gui.slot.task.GuiClickTaskSlot;
-import sunsetsatellite.vintagequesting.gui.slot.task.GuiCraftingTaskSlot;
-import sunsetsatellite.vintagequesting.gui.slot.task.GuiRetrievalTaskSlot;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.quest.Chapter;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
-import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
-import sunsetsatellite.vintagequesting.quest.task.ClickTask;
-import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
 
 import java.util.ArrayList;
@@ -119,6 +110,7 @@ public class GuiQuestInfo extends GuiScreen {
 			ArrayList<ItemStack> stacks = VintageQuesting.condenseItemList(Arrays.stream(mc.thePlayer.inventory.mainInventory).collect(Collectors.toList()));
 			for (Chapter chapter : ((IHasQuests) mc.thePlayer).getQuestGroup().chapters) {
 				for (Quest chapterQuest : chapter.getQuests()) {
+					if(chapterQuest.isCompleted()) continue;
 					for (Task task : chapterQuest.getTasks()) {
 						if(task instanceof RetrievalTask){
 							((RetrievalTask) task).resetProgress();

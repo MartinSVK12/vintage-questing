@@ -1,7 +1,6 @@
 package sunsetsatellite.vintagequesting;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.mojang.nbt.CompoundTag;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.EntityPlayerSP;
@@ -9,16 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.options.components.KeyBindingComponent;
 import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPages;
-import net.minecraft.client.render.stitcher.TextureRegistry;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.data.registry.Registries;
-import net.minecraft.core.data.registry.recipe.adapter.ItemStackJsonAdapter;
-import net.minecraft.core.entity.animal.EntityPig;
-import net.minecraft.core.entity.monster.EntityGiant;
-import net.minecraft.core.entity.monster.EntityMonster;
-import net.minecraft.core.entity.monster.EntitySlime;
-import net.minecraft.core.item.IItemConvertible;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.util.collection.Pair;
@@ -27,33 +17,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sunsetsatellite.vintagequesting.gui.GuiChapterButton;
-import sunsetsatellite.vintagequesting.gui.GuiQuestButton;
-import sunsetsatellite.vintagequesting.gui.GuiQuestInfo;
 import sunsetsatellite.vintagequesting.gui.GuiQuestbook;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
-import sunsetsatellite.vintagequesting.quest.Chapter;
-import sunsetsatellite.vintagequesting.quest.Quest;
-import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
-import sunsetsatellite.vintagequesting.quest.task.ClickTask;
-import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
-import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
-import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
-import sunsetsatellite.vintagequesting.quest.template.reward.ItemRewardTemplate;
-import sunsetsatellite.vintagequesting.quest.template.task.ClickTaskTemplate;
-import sunsetsatellite.vintagequesting.quest.template.task.CraftingTaskTemplate;
-import sunsetsatellite.vintagequesting.quest.template.task.KillTaskTemplate;
-import sunsetsatellite.vintagequesting.quest.template.task.RetrievalTaskTemplate;
 import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
 import sunsetsatellite.vintagequesting.registry.QuestRegistry;
 import sunsetsatellite.vintagequesting.registry.RewardRegistry;
 import sunsetsatellite.vintagequesting.registry.TaskRegistry;
-import sunsetsatellite.vintagequesting.util.Logic;
 import turniplabs.halplibe.helper.gui.factory.base.GuiFactory;
 import turniplabs.halplibe.helper.gui.registered.RegisteredGui;
 import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
-import turniplabs.halplibe.util.RecipeEntrypoint;
 
 import java.util.*;
 
@@ -62,10 +35,10 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
     public static final String MOD_ID = "vintagequesting";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final ChapterRegistry CHAPTERS = new ChapterRegistry();
-	public static final QuestRegistry QUESTS = new QuestRegistry();
-	public static final RewardRegistry REWARDS = new RewardRegistry();
-	public static final TaskRegistry TASKS = new TaskRegistry();
+	public static ChapterRegistry CHAPTERS = new ChapterRegistry();
+	public static QuestRegistry QUESTS = new QuestRegistry();
+	public static RewardRegistry REWARDS = new RewardRegistry();
+	public static TaskRegistry TASKS = new TaskRegistry();
 
 	public static final RegisteredGui QUESTBOOK = new RegisteredGui(MOD_ID, "questbook", new GuiFactory() {
 		@Override
@@ -79,7 +52,9 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 		}
 	}, true);
 
-    @Override
+	public static CompoundTag playerData;
+
+	@Override
     public void onInitialize() {
 
     }

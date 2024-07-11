@@ -3,7 +3,6 @@ package sunsetsatellite.vintagequesting.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.render.FontRenderer;
-import net.minecraft.client.render.Lighting;
 import org.lwjgl.opengl.GL11;
 import sunsetsatellite.vintagequesting.quest.Quest;
 
@@ -50,7 +49,13 @@ public class GuiQuestButton extends GuiButton {
 			GL11.glEnable(3553);
 
 			GL11.glPushMatrix();
-			ItemRenderHelper.renderItemStack(quest.getIcon().getDefaultStack(),x, y, iconSize, iconSize, 1, 1);
+			if(iconSize >= 3){
+				GL11.glTranslatef(3 * iconSize,3 * iconSize,0);
+				ItemRenderHelper.renderItemStack(quest.getIcon().getDefaultStack(),x, y, iconSize, iconSize, 1, 1);
+			} else {
+				ItemRenderHelper.renderItemStack(quest.getIcon().getDefaultStack(),x, y, iconSize, iconSize, 1, 1);
+			}
+
 			GL11.glPopMatrix();
 			GL11.glDisable(2896);
 			GL11.glDisable(2884);
@@ -59,15 +64,15 @@ public class GuiQuestButton extends GuiButton {
 
 	@Override
 	public boolean isHovered(int mouseX, int mouseY) {
-		int x = xPosition+guiQuestbook.currentX;
-		int y = yPosition+guiQuestbook.currentY;
-		return mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
+		int x = (int) ((xPosition * guiQuestbook.zoom)+(guiQuestbook.currentX * guiQuestbook.zoom));
+		int y = (int) ((yPosition * guiQuestbook.zoom)+(guiQuestbook.currentY * guiQuestbook.zoom));
+		return mouseX >= x && mouseY >= y && mouseX < x + (this.width * guiQuestbook.zoom) && mouseY < y + (this.height * guiQuestbook.zoom);
 	}
 
 	@Override
 	public boolean mouseClicked(Minecraft mc, int mouseX, int mouseY) {
-		int x = xPosition+guiQuestbook.currentX;
-		int y = yPosition+guiQuestbook.currentY;
-		return this.enabled && mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
+		int x = (int) ((xPosition * guiQuestbook.zoom)+(guiQuestbook.currentX * guiQuestbook.zoom));
+		int y = (int) ((yPosition * guiQuestbook.zoom)+(guiQuestbook.currentY * guiQuestbook.zoom));
+		return this.enabled && mouseX >= x && mouseY >= y && mouseX < x +(this.width * guiQuestbook.zoom) && mouseY < y + (this.height * guiQuestbook.zoom);
 	}
 }

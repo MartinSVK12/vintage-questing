@@ -57,6 +57,7 @@ public class EntityPlayerMixin implements IHasQuests {
 	public void loadData(CompoundTag tag) {
 		VintageQuesting.playerData = tag;
 		questGroup.chapters.clear();
+		resetAll();
 		CompoundTag chapters = tag.getCompoundOrDefault("QuestingChapters", null);
 		if(chapters != null) {
 			Map<String, Tag<?>> chapterMap = chapters.getValue();
@@ -120,7 +121,6 @@ public class EntityPlayerMixin implements IHasQuests {
 
 	@Override
 	public void resetAll() {
-		questGroup.chapters.clear();
 		for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
 			chapter.reset();
 			for (QuestTemplate quest : chapter.getQuests()) {
@@ -132,7 +132,6 @@ public class EntityPlayerMixin implements IHasQuests {
 					task.reset();
 				}
 			}
-			questGroup.chapters.add(chapter.getInstance());
 		}
 	}
 
@@ -183,6 +182,7 @@ public class EntityPlayerMixin implements IHasQuests {
 	public void init(World world, CallbackInfo ci){
 		VintageQuesting.LOGGER.info("Initializing quests...");
 		questGroup.chapters.clear();
+		resetAll();
 		for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
 			questGroup.chapters.add(chapter.getInstance());
 		}

@@ -32,6 +32,11 @@ public class RetrievalTaskTemplate extends TaskTemplate {
 	}
 
 	@Override
+	public void reset() {
+		cache = null;
+	}
+
+	@Override
 	public Task getInstance() {
 		return cache == null ? cache = getInstanceUnique() : cache;
 	}

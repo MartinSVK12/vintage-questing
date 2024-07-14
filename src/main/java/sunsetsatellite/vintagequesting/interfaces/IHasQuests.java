@@ -13,4 +13,10 @@ public interface IHasQuests {
 	Chapter getCurrentChapter();
 
 	void loadData(CompoundTag tag);
+
+	void resetAll();
+
+	void resetChapter(String id);
+
+	void resetQuest(String id);
 }

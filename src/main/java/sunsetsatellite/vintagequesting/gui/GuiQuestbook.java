@@ -43,11 +43,6 @@ public class GuiQuestbook extends GuiScreen {
 	public GuiQuestbook(EntityPlayer player, GuiScreen parent) {
 		super(parent);
 		this.player = player;
-		if(((IHasQuests) player).getCurrentChapter() != null){
-			this.currentChapter = ((IHasQuests) player).getCurrentChapter();
-			loadChapter(currentChapter);
-		}
-
 	}
 
 	@Override
@@ -140,6 +135,11 @@ public class GuiQuestbook extends GuiScreen {
 			GuiChapterButton chapterButton = new GuiChapterButton(id,chapter,24,24 + (id * 20),120,20);
 			chapterContainer.renderables.add(chapterButton);
 			id++;
+		}
+
+		if(((IHasQuests) player).getCurrentChapter() != null){
+			this.currentChapter = ((IHasQuests) player).getCurrentChapter();
+			loadChapter(currentChapter);
 		}
 	}
 

@@ -94,6 +94,7 @@ public class GuiQuestInfo extends GuiScreen {
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		messageBox.onClick(mouseX,mouseY,mouseButton);
 		taskContainer.mouseClicked(mouseX,mouseY,mouseButton);
+		rewardContainer.mouseClicked(mouseX,mouseY,mouseButton);
 
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}

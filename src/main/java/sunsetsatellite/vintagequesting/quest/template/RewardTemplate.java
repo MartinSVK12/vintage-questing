@@ -19,4 +19,6 @@ public abstract class RewardTemplate {
 	public abstract Reward getInstance();
 
 	public abstract Reward getInstanceUnique();
+
+    public abstract void reset();
 }

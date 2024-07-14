@@ -18,6 +18,9 @@ import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
 import sunsetsatellite.vintagequesting.quest.task.KillTask;
 import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
+import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
+import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
+import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 import sunsetsatellite.vintagequesting.util.QuestGroup;
 
 import java.util.Map;
@@ -112,6 +115,53 @@ public class EntityPlayerMixin implements IHasQuests {
 			for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
 				questGroup.chapters.add(chapter.getInstance());
 			}
+		}
+	}
+
+	@Override
+	public void resetAll() {
+		questGroup.chapters.clear();
+		for (ChapterTemplate chapter : VintageQuesting.CHAPTERS) {
+			chapter.reset();
+			for (QuestTemplate quest : chapter.getQuests()) {
+				quest.reset();
+				for (RewardTemplate reward : quest.getRewards()) {
+					reward.reset();
+				}
+				for (TaskTemplate task : quest.getTasks()) {
+					task.reset();
+				}
+			}
+			questGroup.chapters.add(chapter.getInstance());
+		}
+	}
+
+	@Override
+	public void resetChapter(String id) {
+		ChapterTemplate chapter = VintageQuesting.CHAPTERS.getItem(id);
+		if(chapter == null) return;
+		chapter.reset();
+		for (QuestTemplate quest : chapter.getQuests()) {
+			quest.reset();
+			for (RewardTemplate reward : quest.getRewards()) {
+				reward.reset();
+			}
+			for (TaskTemplate task : quest.getTasks()) {
+				task.reset();
+			}
+		}
+	}
+
+	@Override
+	public void resetQuest(String id) {
+		QuestTemplate quest = VintageQuesting.QUESTS.getItem(id);
+		if(quest == null) return;
+		quest.reset();
+		for (RewardTemplate reward : quest.getRewards()) {
+			reward.reset();
+		}
+		for (TaskTemplate task : quest.getTasks()) {
+			task.reset();
 		}
 	}
 

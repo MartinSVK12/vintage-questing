@@ -77,4 +77,8 @@ public class ChapterTemplate {
 	public int getOrder() {
 		return order;
 	}
+
+	public void reset() {
+		cache = null;
+	}
 }

@@ -1,9 +1,7 @@
 package sunsetsatellite.vintagequesting.quest.template.task;
 
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.quest.Task;
-import sunsetsatellite.vintagequesting.quest.task.CraftingTask;
 import sunsetsatellite.vintagequesting.quest.task.KillTask;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
@@ -36,6 +34,11 @@ public class KillTaskTemplate extends TaskTemplate{
 	@Override
 	public Task getInstanceUnique() {
 		return new KillTask(this);
+	}
+
+	@Override
+	public void reset() {
+		cache = null;
 	}
 
 	@Override

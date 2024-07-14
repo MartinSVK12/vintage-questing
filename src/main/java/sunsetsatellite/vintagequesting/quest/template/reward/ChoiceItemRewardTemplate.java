@@ -2,22 +2,24 @@ package sunsetsatellite.vintagequesting.quest.template.reward;
 
 import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.quest.Reward;
-import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
+import sunsetsatellite.vintagequesting.quest.reward.ChoiceItemReward;
 import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 
-public class ItemRewardTemplate extends RewardTemplate {
+import java.util.List;
 
-	protected ItemStack stack;
+public class ChoiceItemRewardTemplate extends RewardTemplate {
+
+	protected List<ItemStack> stacks;
 	protected Reward cache;
 
-	public ItemRewardTemplate(String id, ItemStack stack){
+	public ChoiceItemRewardTemplate(String id, List<ItemStack> stacks){
         super(id);
 
-        this.stack = stack;
+        this.stacks = stacks;
 	}
 
-	public ItemStack getStack() {
-		return stack;
+	public List<ItemStack> getStacks() {
+		return stacks;
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class ItemRewardTemplate extends RewardTemplate {
 
 	@Override
 	public Reward getInstanceUnique() {
-		return new ItemReward(this);
+		return new ChoiceItemReward(this);
 	}
 
 	@Override

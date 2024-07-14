@@ -32,4 +32,6 @@ public abstract class TaskTemplate {
 	public String getId() {
 		return id;
 	}
+
+	public abstract void reset();
 }

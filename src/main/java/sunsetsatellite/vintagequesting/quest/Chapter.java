@@ -1,9 +1,7 @@
 package sunsetsatellite.vintagequesting.quest;
 
-import net.minecraft.client.render.stitcher.IconCoordinate;
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.lang.I18n;
-import sunsetsatellite.vintagequesting.gui.GuiQuestButton;
 import sunsetsatellite.vintagequesting.quest.template.ChapterTemplate;
 import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
 

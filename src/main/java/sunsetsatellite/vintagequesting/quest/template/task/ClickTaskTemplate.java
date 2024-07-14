@@ -27,4 +27,9 @@ public class ClickTaskTemplate extends TaskTemplate {
 		return new ClickTask(this);
 	}
 
+	@Override
+	public void reset() {
+		cache = null;
+	}
+
 }

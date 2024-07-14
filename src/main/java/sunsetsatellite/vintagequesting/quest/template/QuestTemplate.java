@@ -213,4 +213,8 @@ public class QuestTemplate {
 	public Quest getInstanceUnique(){
 		return new Quest(this);
 	}
+
+	public void reset(){
+		cache = null;
+	}
 }

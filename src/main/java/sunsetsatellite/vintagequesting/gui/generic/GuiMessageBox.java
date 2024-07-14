@@ -4,12 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.render.Scissor;
 import net.minecraft.client.render.tessellator.Tessellator;
-import net.minecraft.core.net.command.TextFormatting;
 import net.minecraft.core.util.helper.MathHelper;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GuiMessageBox
@@ -46,35 +46,49 @@ public class GuiMessageBox
 	private void setupText(String text, int chars) {
 		lines.clear();
 
-		String currentFormat = TextFormatting.WHITE.toString();
+		String[] newlines = text.split("\\n");
+		List<String> completeSplit = new ArrayList<>();
+		ArrayList<String> newlineSplit = new ArrayList<>(Arrays.asList(newlines));
 
-		String[] newlines = text.split("\\n",Integer.MAX_VALUE);
+		String lastFormat = "";
 
-		List<String> split = new ArrayList<>();
-
-		for (String newline : newlines) {
-			if(newline.isEmpty()){
-				split.add("");
-				continue;
-			}
-			String nextFormat = currentFormat;
-			int start = 0;
-			while (start < newline.length()) {
-				String s = newline.substring(start, Math.min(newline.length(), start + chars));
-				char[] charArray = s.toCharArray();
-				for (int i = 0; i < charArray.length; i++) {
-					char c = charArray[i];
-					if (c == '\247' && i + 1 < s.length()) {
-						nextFormat = "§"+charArray[i+1];
+		for (String s : newlineSplit) {
+			String[] words = s.split(" ");
+			StringBuilder line = new StringBuilder();
+			line.append(lastFormat);
+			String currentFormat = lastFormat;
+			boolean formatChanged = false;
+			for (int i = 0; i < words.length; i++) {
+				String word = words[i];
+				if (word.contains("§")) {
+					if (word.indexOf('§') < word.length() - 1) {
+						String format = String.valueOf(word.charAt(word.indexOf('§') + 1));
+						if (format.matches("[0123456789abcdefklmnor]")) {
+							currentFormat = "§" + format;
+							formatChanged = true;
+						}
 					}
 				}
-				split.add(currentFormat+s);
-				start += chars;
-				currentFormat = nextFormat;
+				if (line.length() + 1 + word.length() < chars) {
+					if(formatChanged) {
+						line.append(lastFormat);
+						formatChanged = false;
+					}
+					line.append(word).append(" ");
+				} else {
+					completeSplit.add(line.toString());
+					line = new StringBuilder();
+					line.append(lastFormat);
+					line.append(word).append(" ");
+				}
+				if(i == words.length - 1) {
+					lastFormat = currentFormat;
+				}
 			}
+			completeSplit.add(line.toString());
 		}
 
-		lines.addAll(split);
+		lines.addAll(completeSplit);
 	}
 
 	public int getHeight()

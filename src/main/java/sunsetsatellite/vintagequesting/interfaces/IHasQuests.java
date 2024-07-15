@@ -8,6 +8,8 @@ public interface IHasQuests {
 
 	QuestGroup getQuestGroup();
 
+	void setQuestGroup(QuestGroup group);
+
 	void setCurrentChapter(Chapter chapter);
 
 	Chapter getCurrentChapter();

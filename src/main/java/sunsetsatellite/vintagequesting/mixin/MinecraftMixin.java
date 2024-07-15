@@ -1,12 +1,13 @@
 package sunsetsatellite.vintagequesting.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.window.GameWindow;
-import net.minecraft.core.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,9 +17,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.GuiQuestComplete;
-import sunsetsatellite.vintagequesting.gui.GuiQuestbook;
 import sunsetsatellite.vintagequesting.interfaces.IGuiQuestComplete;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
+import sunsetsatellite.vintagequesting.util.QuestGroup;
 
 @Mixin(value = Minecraft.class,remap = false)
 public abstract class MinecraftMixin implements IGuiQuestComplete {
@@ -68,6 +70,22 @@ public abstract class MinecraftMixin implements IGuiQuestComplete {
 				debounce = 10;
 			}
 		}
+	}
+
+	@Inject(
+		method = "respawn",
+		at = @At("HEAD")
+	)
+	public void saveQuestsOnRespawn(boolean flag, int i, CallbackInfo ci, @Share("questGroup") LocalRef<QuestGroup> questGroup) {
+		questGroup.set(((IHasQuests) thePlayer).getQuestGroup());
+	}
+
+	@Inject(
+		method = "respawn",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/controller/PlayerController;adjustPlayer(Lnet/minecraft/core/entity/player/EntityPlayer;)V",shift = At.Shift.AFTER)
+	)
+	public void restoreQuestsOnRespawn(boolean flag, int i, CallbackInfo ci, @Share("questGroup") LocalRef<QuestGroup> questGroup) {
+		((IHasQuests) thePlayer).setQuestGroup(questGroup.get());
 	}
 
 	@Override

@@ -44,6 +44,11 @@ public class EntityPlayerMixin implements IHasQuests {
 	}
 
 	@Override
+	public void setQuestGroup(QuestGroup group) {
+		questGroup = group;
+	}
+
+	@Override
 	public void setCurrentChapter(Chapter chapter) {
 		currentChapter = chapter;
 	}
@@ -58,6 +63,7 @@ public class EntityPlayerMixin implements IHasQuests {
 		VintageQuesting.playerData = tag;
 		questGroup.chapters.clear();
 		resetAll();
+		setCurrentChapter(null);
 		CompoundTag chapters = tag.getCompoundOrDefault("QuestingChapters", null);
 		if(chapters != null) {
 			Map<String, Tag<?>> chapterMap = chapters.getValue();

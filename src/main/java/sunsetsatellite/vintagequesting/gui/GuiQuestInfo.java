@@ -13,6 +13,7 @@ import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.Reward;
 import sunsetsatellite.vintagequesting.quest.Task;
 import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.quest.task.VisitDimensionTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,6 +119,8 @@ public class GuiQuestInfo extends GuiScreen {
 							for (ItemStack stack : stacks) {
 								((RetrievalTask) task).setProgress(stack,parent.player);
 							}
+						} else if (task instanceof VisitDimensionTask) {
+							((VisitDimensionTask) task).check(parent.player);
 						}
 					}
 				}

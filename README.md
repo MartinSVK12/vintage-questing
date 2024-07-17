@@ -6,13 +6,14 @@ A questing mod for Better than Adventure 7.2!
 
 *The questbook can be opened by default using the `GRAVE` key, this can be changed in the in-game options menu.*
 
-***Currently supports 5 types of tasks and 2 types of reward:***
+***Currently supports 6 types of tasks and 2 types of reward:***
 
 **Tasks:**
 - Retrieval, Retrieval (consuming) tasks
 - Checkbox task
 - Crafting task
 - Kill task
+- Visit dimension task
 
 **Rewards:**
 - Item reward

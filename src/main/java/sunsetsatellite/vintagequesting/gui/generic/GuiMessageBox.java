@@ -43,47 +43,53 @@ public class GuiMessageBox
 		setupText(text, chars);
 	}
 
-	private void setupText(String text, int chars) {
+	private void setupText(String text, int limit) {
 		lines.clear();
 
-		String[] newlines = text.split("\\n");
-		List<String> completeSplit = new ArrayList<>();
-		ArrayList<String> newlineSplit = new ArrayList<>(Arrays.asList(newlines));
+		List<String> completeSplit = new ArrayList<>(); //the processed wrapped text, each entry is one line
+		ArrayList<String> newlineSplit = new ArrayList<>(Arrays.asList(text.split("\\n"))); //text split based only on newlines before processing
 
 		String lastFormat = "";
 
 		for (String s : newlineSplit) {
-			String[] words = s.split(" ");
+			ArrayList<String> words = new ArrayList<>(Arrays.asList(s.split(" ")));
+			ArrayList<String> limitedSizeWords = new ArrayList<>(); //all words here should not be larger than the limit
 			StringBuilder line = new StringBuilder();
 			line.append(lastFormat);
-			String currentFormat = lastFormat;
-			boolean formatChanged = false;
-			for (int i = 0; i < words.length; i++) {
-				String word = words[i];
+			//split words larger than the limit into multiple that can fit
+			for (String word : words) {
+				if (word.length() > limit) {
+					ArrayList<String> split = new ArrayList<>();
+					for (int j = 0; j <= word.length() / limit; j++) {
+						split.add(word.substring(j * limit, Math.min((j + 1) * limit, word.length())));
+					}
+					limitedSizeWords.addAll(split);
+				} else {
+					limitedSizeWords.add(word);
+				}
+			}
+			for (String word : limitedSizeWords) {
+				String currentFormat = "";
+				//check for formatting and extract it
 				if (word.contains("§")) {
 					if (word.indexOf('§') < word.length() - 1) {
 						String format = String.valueOf(word.charAt(word.indexOf('§') + 1));
-						if (format.matches("[0123456789abcdefklmnor]")) {
+						if (format.matches("[0123456789abcdefklmnor]")) { //if matches any valid text format
 							currentFormat = "§" + format;
-							formatChanged = true;
 						}
 					}
 				}
-				if (line.length() + 1 + word.length() < chars) {
-					if(formatChanged) {
-						line.append(lastFormat);
-						formatChanged = false;
-					}
+				if (line.length() + 1 + word.length() < limit) {
+					//if line has not hit the char limit yet
 					line.append(word).append(" ");
 				} else {
+					//line has hit the limit, wrap it preserving the last formatting
 					completeSplit.add(line.toString());
 					line = new StringBuilder();
 					line.append(lastFormat);
 					line.append(word).append(" ");
 				}
-				if(i == words.length - 1) {
-					lastFormat = currentFormat;
-				}
+				if(!currentFormat.isEmpty()) lastFormat = currentFormat; //change last format if a new one was found in this iteration
 			}
 			completeSplit.add(line.toString());
 		}

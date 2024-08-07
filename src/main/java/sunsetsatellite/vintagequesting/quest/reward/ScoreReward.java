@@ -3,12 +3,9 @@ package sunsetsatellite.vintagequesting.quest.reward;
 import com.mojang.nbt.CompoundTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.EntityPlayer;
-import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.gui.generic.GuiString;
-import sunsetsatellite.vintagequesting.gui.slot.reward.GuiItemRewardSlot;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.Reward;
-import sunsetsatellite.vintagequesting.quest.template.reward.ItemRewardTemplate;
 import sunsetsatellite.vintagequesting.quest.template.reward.ScoreRewardTemplate;
 
 import java.util.List;

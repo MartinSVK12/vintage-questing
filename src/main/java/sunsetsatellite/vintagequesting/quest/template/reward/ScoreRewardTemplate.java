@@ -1,8 +1,6 @@
 package sunsetsatellite.vintagequesting.quest.template.reward;
 
-import net.minecraft.core.item.ItemStack;
 import sunsetsatellite.vintagequesting.quest.Reward;
-import sunsetsatellite.vintagequesting.quest.reward.ItemReward;
 import sunsetsatellite.vintagequesting.quest.reward.ScoreReward;
 import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 

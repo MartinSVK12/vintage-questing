@@ -43,8 +43,7 @@ public class ScoreReward extends Reward {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int width) {
-		renderables.add(new GuiString(mc,"Item Reward:",0xFFFFFFFF));
+		renderables.add(new GuiString(mc,"Score Reward:",0xFFFFFFFF));
 		renderables.add(new GuiString(mc,"Score +"+getAmount(),0xFF00FF00));
-		//renderables.add(new GuiItemRewardSlot(mc,width / 2 - 38,24, this));
 	}
 }

@@ -159,5 +159,5 @@ tasks.register('github') {
 tasks.register('deploy'){
 	description "Publish mod to github."
 	group "publishing"
-	dependsOn github
+	dependsOn 'github'
 }

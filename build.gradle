@@ -1,3 +1,9 @@
+buildscript {
+	dependencies {
+		classpath 'org.kohsuke:github-api:1.135'
+	}
+}
+
 plugins {
 	id 'babric-loom' version '1.4.+'
 	id 'java'
@@ -126,4 +132,32 @@ processResources {
 
 remapJar {
 	archiveVersion.set(archiveVersion.get()+"-${bta_version}")
+}
+
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
+import java.nio.file.Files
+
+tasks.register('github') {
+	doLast {
+		def github = GitHub.connectUsingOAuth(githubToken as String)
+		def repository = github.getRepository("MartinSVK12/vintage-questing")
+
+		def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+		releaseBuilder.name("$version")
+		releaseBuilder.body(Files.readString(java.nio.file.Path.of("${rootProject.projectDir}/CHANGELOG.md")))
+		releaseBuilder.commitish("main")
+		releaseBuilder.prerelease(true)
+
+		def release = releaseBuilder.create()
+		release.uploadAsset(project.file(remapJar.getArchiveFile().get().getAsFile()),"application/java-archive")
+		release.uploadAsset(project.file(remapSourcesJar.getArchiveFile().get().getAsFile()),"application/java-archive")
+	}
+}
+
+tasks.register('deploy'){
+	description "Publish mod to github."
+	group "publishing"
+	dependsOn github
 }

@@ -44,9 +44,9 @@ public class GuiQuestInfo extends GuiScreen {
 		drawLineVertical(width/2,24,height-32,0xFFFFFFFF);
 
 		drawStringCentered(fontRenderer,quest.getTranslatedName(),width/2,8,0xFFFFFFFF);
-		drawStringCentered(fontRenderer,"Rewards:",width / 4,height / 2,0xFFFFFFFF);
+		drawStringCentered(fontRenderer,"Rewards:",width / 4,height / 2 + 10,0xFFFFFFFF);
 		if(quest.getRewards().isEmpty()){
-			drawStringCentered(fontRenderer,"No rewards :(",width / 4,height / 2 + 24,0xFF808080);
+			drawStringCentered(fontRenderer,"No rewards :(",width / 4,height / 2 + 34,0xFF808080);
 		}
 		drawStringCentered(fontRenderer,"Tasks:",width - (width / 4) - 8 ,24,0xFFFFFFFF);
 		if(quest.getTasks().isEmpty()){
@@ -79,8 +79,8 @@ public class GuiQuestInfo extends GuiScreen {
 		}
 
 		controlList.add(new GuiButton(0,width/2 - 30, height-24, 60, 20, "Back"));
-		controlList.add(claimButton = new GuiButton(1,width / 4 - 120, height-24, 240, 20, "Claim"));
-		controlList.add(submitButton = new GuiButton(2,width - (width / 4) - 120, height-24, 240, 20, "Submit"));
+		controlList.add(claimButton = new GuiButton(1,width / 4 - 120, height-24, 200, 20, "Claim"));
+		controlList.add(submitButton = new GuiButton(2,width - (width / 4) - 80, height-24, 200, 20, "Submit"));
 		super.init();
 	}
 

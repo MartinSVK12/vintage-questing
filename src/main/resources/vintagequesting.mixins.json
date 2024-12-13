@@ -6,6 +6,7 @@
   "mixins": [
     "EntityPlayerMixin",
     "GameSettingsMixin",
+    "InventoryPlayerMixin",
     "MinecraftMixin",
     "SlotCraftingMixin"
   ],

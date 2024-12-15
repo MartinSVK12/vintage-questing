@@ -149,6 +149,7 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 				for (Task task : chapterQuest.getTasks()) {
 					if(task instanceof RetrievalTask){
 						if(((RetrievalTask) task).canConsume()) continue;
+						if(task.isCompleted()) continue;
 						((RetrievalTask) task).resetProgress();
 						for (ItemStack stack : stacks) {
 							((RetrievalTask) task).setProgress(stack,player);

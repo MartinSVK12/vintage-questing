@@ -6,10 +6,10 @@
   "mixins": [
     "EntityPlayerMixin",
     "GameSettingsMixin",
-    "MinecraftMixin",
     "SlotCraftingMixin"
   ],
   "client": [
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.options.components.KeyBindingComponent;
 import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.util.collection.Pair;
@@ -18,7 +19,13 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.vintagequesting.gui.GuiQuestbook;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
+import sunsetsatellite.vintagequesting.quest.Chapter;
+import sunsetsatellite.vintagequesting.quest.Quest;
+import sunsetsatellite.vintagequesting.quest.Task;
+import sunsetsatellite.vintagequesting.quest.task.RetrievalTask;
+import sunsetsatellite.vintagequesting.quest.task.VisitDimensionTask;
 import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
 import sunsetsatellite.vintagequesting.registry.QuestRegistry;
 import sunsetsatellite.vintagequesting.registry.RewardRegistry;
@@ -29,6 +36,7 @@ import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, GameStartEntrypoint {
@@ -131,5 +139,26 @@ public class VintageQuesting implements ModInitializer, ClientStartEntrypoint, G
 			}
 		}
 		return stacks;
+	}
+
+	public static void checkQuestCompletion(EntityPlayer player){
+		ArrayList<ItemStack> stacks = VintageQuesting.condenseItemList(Arrays.stream(player.inventory.mainInventory).collect(Collectors.toList()));
+		for (Chapter chapter : ((IHasQuests) player).getQuestGroup().chapters) {
+			for (Quest chapterQuest : chapter.getQuests()) {
+				if(chapterQuest.isCompleted()) continue;
+				for (Task task : chapterQuest.getTasks()) {
+					if(task instanceof RetrievalTask){
+						if(((RetrievalTask) task).canConsume()) continue;
+						if(task.isCompleted()) continue;
+						((RetrievalTask) task).resetProgress();
+						for (ItemStack stack : stacks) {
+							((RetrievalTask) task).setProgress(stack,player);
+						}
+					} else if (task instanceof VisitDimensionTask) {
+						((VisitDimensionTask) task).check(player);
+					}
+				}
+			}
+		}
 	}
 }

@@ -7,10 +7,10 @@
     "EntityPlayerMixin",
     "GameSettingsMixin",
     "InventoryPlayerMixin",
-    "MinecraftMixin",
     "SlotCraftingMixin"
   ],
   "client": [
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,3 @@
+- Made the UI not goof up at high GUI scales.
+- Completion of retrieval tasks in quests will now be checked every time the player inventory changed (should be slightly more automatic).
+- Keep already completed tasks completed.

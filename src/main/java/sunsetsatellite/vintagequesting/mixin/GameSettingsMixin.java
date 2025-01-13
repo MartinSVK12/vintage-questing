@@ -1,6 +1,8 @@
 package sunsetsatellite.vintagequesting.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.input.InputDevice;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.option.KeyBinding;
@@ -9,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
 
+@Environment(EnvType.CLIENT)
 @Mixin(
         value = GameSettings.class,
         remap = false

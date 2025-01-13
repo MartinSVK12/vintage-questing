@@ -5,12 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityPlayerMixin",
-    "GameSettingsMixin",
     "InventoryPlayerMixin",
     "SlotCraftingMixin"
   ],
   "client": [
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "GameSettingsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

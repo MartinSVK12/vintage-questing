@@ -2,6 +2,8 @@ package sunsetsatellite.vintagequesting.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,6 +24,7 @@ import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
 import sunsetsatellite.vintagequesting.util.QuestGroup;
 
+@Environment(EnvType.CLIENT)
 @Mixin(value = Minecraft.class,remap = false)
 public abstract class MinecraftMixin implements IGuiQuestComplete {
 

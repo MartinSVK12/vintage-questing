@@ -38,7 +38,7 @@ public class VintageQuesting implements ModInitializer, RecipeEntrypoint, GameSt
 	}
 
 	public static void registerClientCommands() {
-		System.out.println("Registered Client Commands");
+		LOGGER.info("Registering client commands...");
 		if (EnvironmentHelper.isSinglePlayer()) {
 			CommandManager.registerCommand(new CommandQuest());
 		}

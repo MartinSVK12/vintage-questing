@@ -21,7 +21,7 @@ public class CommandLogicQuest {
 		Quest quest = chapter.getQuest(questTemplate);
 		quest.forceComplete();
 
-		sender.sendMessage("Quest: "+questTemplate.getTranslatedName()+" has been completed successfully !");
+		sender.sendMessage("Quest \""+questTemplate.getTranslatedName()+"\" has been completed successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -41,7 +41,7 @@ public class CommandLogicQuest {
 		}
 		quest.forceComplete();
 
-		sender.sendMessage("Quest: "+questTemplate.getTranslatedName()+" has been completed successfully !");
+		sender.sendMessage("Quest \""+questTemplate.getTranslatedName()+"\" has been completed successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -65,7 +65,7 @@ public class CommandLogicQuest {
 		Quest quest = chapter.getQuest(questTemplate);
 		quest.reset();
 
-		sender.sendMessage("Quest: "+questTemplate.getTranslatedName()+" has been reset successfully !");
+		sender.sendMessage("Quest \""+questTemplate.getTranslatedName()+"\" has been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -75,7 +75,7 @@ public class CommandLogicQuest {
 		for (Quest quest : quests) {
 			quest.reset();
 		}
-		sender.sendMessage("Chapter Page: "+chapterPage.getName()+" ("+questAmount+" quests) has been reset successfully !");
+		sender.sendMessage("Chapter page \""+chapterPage.getName()+"\" ("+questAmount+" quests) has been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -88,7 +88,7 @@ public class CommandLogicQuest {
 				quest.reset();
 			}
 			questAmount += chapterQuestAmount;
-			sender.sendMessage("Chapter Page: "+chapterPage.getName()+" ("+chapterQuestAmount+" quests) has been reset successfully !");
+			sender.sendMessage("Chapter page: "+chapterPage.getName()+" ("+chapterQuestAmount+" quests) has been reset successfully!");
 		}
 		sender.sendMessage("All the "+questAmount+" quests have been reset successfully !");
 		return Command.SINGLE_SUCCESS;

@@ -9,6 +9,7 @@ import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
+import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestChapterPage;
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestId;
 import sunsetsatellite.vintagequesting.command.commandlogic.CommandLogicQuest;
@@ -84,7 +85,7 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 
 	@Override
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
-		System.out.println("Command registered: quest");
+		VintageQuesting.LOGGER.info("Command registered: quest");
 		ArgumentBuilderLiteral<CommandSource> builder = ArgumentBuilderLiteral.<CommandSource>literal("quest");
 
 		questComplete(builder);

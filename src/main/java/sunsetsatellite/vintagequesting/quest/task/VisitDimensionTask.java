@@ -56,4 +56,14 @@ public class VisitDimensionTask extends Task {
 		renderables.add(new GuiVisitDImensionTaskSlot(mc, width / 2 - 48, 20, this));
 	}
 
+	@Override
+	public void forceComplete() {
+		visited = true;
+	}
+
+	@Override
+	public void reset() {
+		visited = false;
+	}
+
 }

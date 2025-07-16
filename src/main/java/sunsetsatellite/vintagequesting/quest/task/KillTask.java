@@ -71,4 +71,14 @@ public class KillTask extends Task {
 		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName(), 0xFFFFFFFF));
 		renderables.add(new GuiKillTaskSlot(mc, width / 2 - 48, 24, this));
 	}
+
+	@Override
+	public void forceComplete() {
+		progress = requiredCount;
+	}
+
+	@Override
+	public void reset() {
+		progress = 0;
+	}
 }

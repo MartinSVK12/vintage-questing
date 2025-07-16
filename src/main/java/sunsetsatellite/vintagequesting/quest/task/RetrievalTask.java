@@ -89,6 +89,16 @@ public class RetrievalTask extends Task {
 		renderables.add(new GuiRetrievalTaskSlot(mc, width / 2 - 48, 24, this));
 	}
 
+	@Override
+	public void forceComplete() {
+		progress = requirement.stackSize;
+	}
+
+	@Override
+	public void reset() {
+		progress = 0;
+	}
+
 	public boolean canConsume() {
 		return canConsume;
 	}

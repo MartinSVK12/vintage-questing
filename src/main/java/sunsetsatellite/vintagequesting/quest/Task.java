@@ -46,4 +46,8 @@ public abstract class Task {
 	}
 
 	public abstract void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width);
+
+	public abstract void forceComplete();
+
+	public abstract void reset();
 }

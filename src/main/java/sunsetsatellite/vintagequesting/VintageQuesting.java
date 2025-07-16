@@ -6,13 +6,16 @@ import net.minecraft.client.gui.options.components.KeyBindingComponent;
 import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.command.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sunsetsatellite.vintagequesting.command.commands.CommandQuest;
 import sunsetsatellite.vintagequesting.interfaces.IKeybinds;
 import sunsetsatellite.vintagequesting.registry.ChapterRegistry;
 import sunsetsatellite.vintagequesting.registry.QuestRegistry;
 import sunsetsatellite.vintagequesting.registry.RewardRegistry;
 import sunsetsatellite.vintagequesting.registry.TaskRegistry;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 import turniplabs.halplibe.util.RecipeEntrypoint;
@@ -31,7 +34,17 @@ public class VintageQuesting implements ModInitializer, RecipeEntrypoint, GameSt
 	public static RewardRegistry REWARDS = new RewardRegistry();
 	public static TaskRegistry TASKS = new TaskRegistry();
 
-    @Override
+	public static void registerServerCommands() {
+	}
+
+	public static void registerClientCommands() {
+		System.out.println("Registered Client Commands");
+		if (EnvironmentHelper.isSinglePlayer()) {
+			CommandManager.registerCommand(new CommandQuest());
+		}
+	}
+
+	@Override
     public void onInitialize() {
         LOGGER.info("Vintage Questing initialized.");
     }

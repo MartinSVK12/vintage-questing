@@ -8,7 +8,6 @@ import net.minecraft.core.lang.I18n;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.QuestChapterPage;
 import sunsetsatellite.vintagequesting.gui.QuestToast;
-import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
 import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
@@ -256,5 +255,18 @@ public class Quest {
 
 	public void writeToNbt(CompoundTag nbt) {
 		nbt.putBoolean("Completed", complete);
+	}
+
+	public void forceComplete() {
+		for (Task task : tasks) {
+			task.forceComplete();
+		}
+	}
+
+	public void reset() {
+		for (Task task : tasks) {
+			task.reset();
+		}
+		this.complete = false;
 	}
 }

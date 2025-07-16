@@ -48,4 +48,14 @@ public class ClickTask extends Task {
 		renderables.add(new GuiClickTaskSlot(mc, width / 2 - 48, 20, true, this));
 	}
 
+	@Override
+	public void forceComplete() {
+		click();
+	}
+
+	@Override
+	public void reset() {
+		clicked = false;
+	}
+
 }

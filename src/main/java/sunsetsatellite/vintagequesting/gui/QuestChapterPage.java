@@ -18,6 +18,7 @@ public abstract class QuestChapterPage {
 	protected final List<Quest> questList = new ArrayList<>();
 
 	protected final String id;
+	protected final int orderId;
 
     public abstract @NotNull String getName();
 
@@ -26,6 +27,13 @@ public abstract class QuestChapterPage {
 	public QuestChapterPage(String id){
 		VintageQuesting.CHAPTERS.register(id,this);
 		this.id = id;
+		this.orderId = 0;
+	}
+
+	public QuestChapterPage(String id, int orderId){
+		VintageQuesting.CHAPTERS.register(id,this);
+		this.id = id;
+		this.orderId = orderId;
 	}
 
     public void addQuest(@NotNull QuestTemplate quest) {
@@ -109,5 +117,9 @@ public abstract class QuestChapterPage {
 
 	public String getId() {
 		return id;
+	}
+
+	public int getOrderId() {
+		return orderId;
 	}
 }

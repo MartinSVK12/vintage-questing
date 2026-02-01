@@ -27,9 +27,7 @@ import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -99,6 +97,8 @@ public class ScreenQuestbook extends Screen
 
     private BGLayer[] layers;
 
+	private List<QuestChapterPage> chapters = new ArrayList<>();
+
     public ScreenQuestbook(Screen parent, QuestChapterPage page)
     {
         mouseXOld = 0;
@@ -116,6 +116,8 @@ public class ScreenQuestbook extends Screen
 			layers[i] = new BGLayer(i);
 		}
 
+		VintageQuesting.CHAPTERS.forEach(chapters::add);
+		chapters.sort(Comparator.comparingInt(QuestChapterPage::getOrderId));
     }
 
     @Override
@@ -206,7 +208,7 @@ public class ScreenQuestbook extends Screen
             if (pagesListHeight < bottom - top) {
                 pagesListY = top + (bottom - top - pagesListHeight) / 2;
             }
-            for(QuestChapterPage page : VintageQuesting.CHAPTERS) {
+            for(QuestChapterPage page : chapters) {
                 if (mx >= pageListLeft && mx <= (pageListRight - 6) && my >= pagesListY && my <= pagesListY + PAGE_BUTTON_HEIGHT) {
                     currentPage = page;
                     mc.sndManager.playSound("random.click", SoundCategory.GUI_SOUNDS, 1.0F, 1.0F);
@@ -890,7 +892,7 @@ public class ScreenQuestbook extends Screen
     private QuestChapterPage drawPagesListItems(int x, int y, int width, int mouseX, int mouseY) {
         int y2 = y;
         QuestChapterPage pageHovered = null;
-		for (QuestChapterPage page : VintageQuesting.CHAPTERS) {
+		for (QuestChapterPage page : chapters) {
 			String name = page.getName();
 			int textColor = 0xFF7F7F7F;
 			if (page == currentPage) {

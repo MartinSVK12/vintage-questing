@@ -87,6 +87,7 @@ public class ScreenQuestInfo extends Screen {
 	@Override
 	public void mouseReleased(int mx, int my, int buttonNum) {
 		messageBox.mouseMovedOrUp(mx,my,buttonNum);
+		taskContainer.mouseMovedOrUp(mx,my,buttonNum);
 		super.mouseReleased(mx, my, buttonNum);
 	}
 

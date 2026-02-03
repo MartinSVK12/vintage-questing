@@ -126,7 +126,7 @@ public class MessageBoxElement
         {
             float wheel = Mouse.getDWheel();
             if (wheel != 0.0f)
-                scroll(wheel / -1200.0f);
+                scroll(wheel / -30f);
         }
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);

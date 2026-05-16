@@ -1,0 +1,2 @@
+- Chapters in the questbook should now be ordered properly.
+- Made scrolling less terrible.

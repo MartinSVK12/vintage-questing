@@ -28,9 +28,9 @@ public class CraftingTask extends Task {
 	}
 
 	public int addProgress(ItemStack stack) {
-		if(stack == null) return -1;
-		if(stack.isItemEqual(requirement) || (ignoreMeta && stack.itemID == requirement.itemID)){
-			if(checksNbt && !(stack.getData().equals(requirement.getData()))){
+		if (stack == null) return -1;
+		if (stack.isItemEqual(requirement) || (ignoreMeta && stack.itemID == requirement.itemID)) {
+			if (checksNbt && !(stack.getData().equals(requirement.getData()))) {
 				return -1;
 			}
 			progress += stack.stackSize;
@@ -73,7 +73,7 @@ public class CraftingTask extends Task {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width) {
-		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName(), 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, (i + 1) + ". " + this.getTranslatedTypeName(), 0xFFFFFFFF));
 		renderables.add(new GuiCraftingTaskSlot(mc, width / 2 - 48, 24, this));
 	}
 
@@ -91,7 +91,11 @@ public class CraftingTask extends Task {
 		return canConsume;
 	}
 
-	public boolean checksNbt() {return checksNbt;}
+	public boolean checksNbt() {
+		return checksNbt;
+	}
 
-	public boolean ignoresMeta() {return ignoreMeta;}
+	public boolean ignoresMeta() {
+		return ignoreMeta;
+	}
 }

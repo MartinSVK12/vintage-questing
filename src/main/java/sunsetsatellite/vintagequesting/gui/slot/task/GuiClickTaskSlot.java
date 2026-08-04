@@ -2,8 +2,8 @@ package sunsetsatellite.vintagequesting.gui.slot.task;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.render.Font;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.render.font.FontRenderer;
+import net.minecraft.client.render.renderer.GLRenderer;
 import sunsetsatellite.vintagequesting.interfaces.IClickable;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.task.ClickTask;
@@ -42,27 +42,21 @@ public class GuiClickTaskSlot extends Gui implements IRenderable, IClickable {
 	public void render(int x, int y, int mouseX, int mouseY) {
 		if (this.visible) {
 			this.string = task.isCompleted() ? "✔" : "❌";
-			Font fontRenderer = mc.font;
+			FontRenderer fontRenderer = mc.font;
 			boolean mouseOver = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
 			int state = this.getButtonState(mouseOver);
-			mc.textureManager.loadTexture("/assets/vq/textures/gui/gui.png").bind();
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.drawTexturedModalRect(x, y, 0, 46 + state * 20, this.width / 2, this.height);
-			this.drawTexturedModalRect(x + this.width / 2, y, 200 - this.width / 2, 46 + state * 20, this.width / 2, this.height);
-			this.mouseDragged(mc, x,y, mouseX, mouseY);
-			int textColor;
-			switch (state) {
-				case 0:
-					textColor = 10526880;
-					break;
-				case 1:
-					textColor = 14737632;
-					break;
-				default:
-					textColor = 16777120;
-			}
+			mc.textureManager.loadTexture("/assets/vintagequesting/textures/gui/gui.png").bind();
+			GLRenderer.setColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			this.drawTexturedModalRect(x, (double) y, 0, 46 + state * 20, this.width, this.height, 256, height);
+			//this.drawTexturedModalRect(x + this.width / 2, y, 200 - this.width / 2, 46 + state * 20, this.width / 2, this.height);
+			this.mouseDragged(mc, x, y, mouseX, mouseY);
+			int textColor = switch (state) {
+				case 0 -> 10526880;
+				case 1 -> 14737632;
+				default -> 16777120;
+			};
 
-			this.drawStringCentered(fontRenderer, this.string, x + this.width / 2, y + (this.height - 8) / 2, textColor);
+			drawStringCenteredShadow(fontRenderer, this.string, x + this.width / 2, y + (this.height - 8) / 2, textColor);
 		}
 	}
 

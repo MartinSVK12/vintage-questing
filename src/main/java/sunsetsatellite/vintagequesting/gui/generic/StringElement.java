@@ -18,16 +18,16 @@ public class StringElement extends Gui implements IRenderable {
 
 	@Override
 	public void render(int x, int y, int mouseX, int mouseY) {
-		drawString(mc.font,string,x,y,argb);
+		mc.font.render(string, x, y).setColor(argb).call();
 	}
 
 	@Override
 	public int getHeight() {
-		return mc.font.fontHeight;
+		return mc.font.getFont().fontHeight();
 	}
 
 	@Override
 	public int getWidth() {
-		return mc.font.getStringWidth(string);
+		return mc.font.stringWidth(string);
 	}
 }

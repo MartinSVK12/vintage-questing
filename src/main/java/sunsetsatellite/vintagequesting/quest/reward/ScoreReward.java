@@ -25,7 +25,7 @@ public class ScoreReward extends Reward {
 
 	@Override
 	public void give(Player player) {
-		if(!redeemed){
+		if (!redeemed) {
 			player.score += amount;
 			redeemed = true;
 		}
@@ -43,7 +43,7 @@ public class ScoreReward extends Reward {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int width) {
-		renderables.add(new StringElement(mc,"Score Reward:",0xFFFFFFFF));
-		renderables.add(new StringElement(mc,"Score +"+getAmount(),0xFF00FF00));
+		renderables.add(new StringElement(mc, "Score Reward:", 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, "Score +" + getAmount(), 0xFF00FF00));
 	}
 }

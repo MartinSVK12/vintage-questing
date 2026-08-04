@@ -12,15 +12,15 @@ import java.util.List;
 
 public class ClickTask extends Task {
 
-    private boolean clicked = false;
+	private boolean clicked = false;
 
 	public ClickTask(TaskTemplate template) {
 		super(template);
 	}
 
 	public void click() {
-        clicked = true;
-    }
+		clicked = true;
+	}
 
 	@Override
 	public boolean isCompleted() {
@@ -44,7 +44,7 @@ public class ClickTask extends Task {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width) {
-		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName(), 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, (i + 1) + ". " + this.getTranslatedTypeName(), 0xFFFFFFFF));
 		renderables.add(new GuiClickTaskSlot(mc, width / 2 - 48, 20, true, this));
 	}
 

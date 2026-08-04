@@ -2,9 +2,8 @@ package sunsetsatellite.vintagequesting.quest.template;
 
 import net.minecraft.core.achievement.Achievement;
 import net.minecraft.core.item.IItemConvertible;
-import net.minecraft.core.lang.I18n;
+import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.vintagequesting.VintageQuesting;
-import sunsetsatellite.vintagequesting.quest.Quest;
 import sunsetsatellite.vintagequesting.util.Logic;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class QuestTemplate {
 		this.icon = icon;
 		this.questLogic = questLogic;
 		this.taskLogic = taskLogic;
-		VintageQuesting.QUESTS.register(id,this);
+		VintageQuesting.QUESTS.register(id, this);
 	}
 
 	public QuestTemplate(String id, String langId, IItemConvertible icon, Logic questLogic, Logic taskLogic) {
@@ -43,7 +42,7 @@ public class QuestTemplate {
 		this.icon = icon;
 		this.questLogic = questLogic;
 		this.taskLogic = taskLogic;
-		VintageQuesting.QUESTS.register(id,this);
+		VintageQuesting.QUESTS.register(id, this);
 	}
 
 	public String getId() {
@@ -92,7 +91,7 @@ public class QuestTemplate {
 	}
 
 	public String getTranslatedName() {
-		return I18n.getInstance().translateNameKey(name);
+		return Catalyst.translateNameKey(name);
 	}
 
 	public QuestTemplate setName(String name) {
@@ -105,7 +104,7 @@ public class QuestTemplate {
 	}
 
 	public String getTranslatedDescription() {
-		return I18n.getInstance().translateDescKey(description);
+		return Catalyst.translateDescKey(description);
 	}
 
 	public QuestTemplate setDescription(String description) {

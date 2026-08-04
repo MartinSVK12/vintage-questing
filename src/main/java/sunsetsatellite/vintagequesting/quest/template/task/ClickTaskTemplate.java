@@ -9,7 +9,7 @@ public class ClickTaskTemplate extends TaskTemplate {
 	protected Task cache;
 
 	public ClickTaskTemplate(String id) {
-		super(id,"type.task.vq.click");
+		super(id, "type.task.vq.click");
 	}
 
 	@Override

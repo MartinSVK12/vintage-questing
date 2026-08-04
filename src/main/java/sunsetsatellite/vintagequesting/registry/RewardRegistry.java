@@ -9,7 +9,7 @@ public class RewardRegistry extends Registry<RewardTemplate> {
 
 	@Override
 	public void register(String key, RewardTemplate item) {
-		if(!Objects.equals(item.getId(), key)){
+		if (!Objects.equals(item.getId(), key)) {
 			throw new IllegalArgumentException("Identifiers don't match!");
 		}
 		super.register(key, item);

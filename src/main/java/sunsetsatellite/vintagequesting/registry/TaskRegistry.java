@@ -9,8 +9,8 @@ public class TaskRegistry extends Registry<TaskTemplate> {
 
 	@Override
 	public void register(String key, TaskTemplate item) {
-		if(!Objects.equals(item.getId(), key)){
-			throw new IllegalArgumentException("Identifiers don't match! "+item.getId()+" != "+key);
+		if (!Objects.equals(item.getId(), key)) {
+			throw new IllegalArgumentException("Identifiers don't match! " + item.getId() + " != " + key);
 		}
 		super.register(key, item);
 	}

@@ -1,50 +1,40 @@
 {
-  "schemaVersion": 1,
-  "id": "vintagequesting",
-  "version": "${version}",
-
-  "name": "Vintage Questing",
-  "description": "A questing mod for BTA.",
-  "authors": [
-    "sunsetsatellite"
-  ],
+	"schemaVersion": 1,
+	"id": "vintagequesting",
+	"version": "${version}",
+	"name": "Vintage Questing",
+	"description": "A questing mod for BTA.",
+	"authors": [
+		"sunsetsatellite"
+	],
 	"contributors": [
 		"toufouMaster"
 	],
-  "contact": {
-    "homepage": "",
-    "sources": ""
-  },
-
+	"contact": {
+		"homepage": "",
+		"sources": "https://github.com/MartinSVK12/vintage-questing",
+		"issues": "https://github.com/MartinSVK12/vintage-questing/issues"
+	},
 	"icon": "icon.png",
-  "license": "MIT",
-
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-			"sunsetsatellite.vintagequesting.VintageQuesting"
-    ],
-		"beforeGameStart": [
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
 			"sunsetsatellite.vintagequesting.VintageQuesting"
 		],
-		"afterGameStart": [
-			"sunsetsatellite.vintagequesting.VintageQuesting"
-		],
-		"beforeClientStart": [
-			"sunsetsatellite.vintagequesting.VintageQuesting"
-		],
-		"afterClientStart": [
-			"sunsetsatellite.vintagequesting.VintageQuesting"
+		"client": [
+			"sunsetsatellite.vintagequesting.VintageQuestingClient"
 		]
 	},
-  "mixins": [
+	"mixins": [
 		"vintagequesting.mixins.json"
-  ],
-
-  "depends": {
-		"minecraft": "~7.3",
-    "fabricloader": ">=0.15.5"
-  },
-  "suggests": {
-  }
+	],
+	"depends": {
+		"minecraft": "~8.0",
+		"catalyst-core": ">=${core}",
+		"halplibe": ">=${halplibe}",
+		"fabricloader": ">=${loader}"
+	},
+	"suggests": {
+	}
 }

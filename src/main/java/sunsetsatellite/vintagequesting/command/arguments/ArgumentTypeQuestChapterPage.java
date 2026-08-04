@@ -35,9 +35,9 @@ public class ArgumentTypeQuestChapterPage implements ArgumentType<QuestChapterPa
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		for(QuestChapterPage chapterPage : getChapters()){
+		for (QuestChapterPage chapterPage : getChapters()) {
 			if (chapterPage.getId().startsWith(builder.getRemaining())) {
-				builder.suggest("\""+chapterPage.getId()+"\"");
+				builder.suggest("\"" + chapterPage.getId() + "\"");
 			}
 		}
 

@@ -11,7 +11,7 @@ public class VisitDimensionTaskTemplate extends TaskTemplate {
 	protected Dimension dimension;
 
 	public VisitDimensionTaskTemplate(String id, Dimension dimension) {
-		super(id,"type.task.vq.visitDimension");
+		super(id, "type.task.vq.visitDimension");
 		this.dimension = dimension;
 	}
 
@@ -21,7 +21,7 @@ public class VisitDimensionTaskTemplate extends TaskTemplate {
 
 	@Override
 	public TaskTemplate copy() {
-		return new VisitDimensionTaskTemplate(id,dimension);
+		return new VisitDimensionTaskTemplate(id, dimension);
 	}
 
 	@Override

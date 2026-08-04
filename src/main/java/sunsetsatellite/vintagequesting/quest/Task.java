@@ -2,7 +2,7 @@ package sunsetsatellite.vintagequesting.quest;
 
 import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.lang.I18n;
+import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
 import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
@@ -31,8 +31,8 @@ public abstract class Task {
 		return typeName;
 	}
 
-	public String getTranslatedTypeName(){
-		return I18n.getInstance().translateNameKey(typeName);
+	public String getTranslatedTypeName() {
+		return Catalyst.translateNameKey(typeName);
 	}
 
 	public abstract Task copy();

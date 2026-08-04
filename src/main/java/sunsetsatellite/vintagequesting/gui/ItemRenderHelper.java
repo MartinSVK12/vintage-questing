@@ -1,48 +1,41 @@
 package sunsetsatellite.vintagequesting.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.Lighting;
-import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
-import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.renderer.GLRenderer;
+import net.minecraft.client.render.renderer.State;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.LightIndexHelper;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class ItemRenderHelper {
 	public static Minecraft mc;
-	private static void initMC(){
-		if (mc == null){
+
+	private static void initMC() {
+		if (mc == null) {
 			mc = Minecraft.getMinecraft();
 		}
 	}
-	public static void renderItemStack(@Nullable ItemStack itemStack, int x, int y, double scaleX, double scaleY, float brightness, float alpha){
-		initMC();
-		GL11.glPushMatrix();
-		Lighting.enableInventoryLight();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+	public static void renderItemStack(@Nullable ItemStack itemStack, int x, int y, double scaleX, double scaleY) {
+		initMC();
+		GLRenderer.pushFrame();
+		Lighting.enableInventoryLight();
+		GLRenderer.setColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		GLRenderer.enableState(State.DEPTH_TEST);
 		if (itemStack != null) {
-			BlockModel.setRenderBlocks(EntityRenderDispatcher.instance.itemRenderer.renderBlocksInstance);
 			ItemModel itemModel = ItemModelDispatcher.getInstance().getDispatch(itemStack.getItem());
-			GL11.glTranslatef(x, y, 0);
-			GL11.glScaled(scaleX,scaleY,1);
-			itemModel.renderItemIntoGui(Tessellator.instance, mc.font, mc.textureManager, itemStack, 0, 0, brightness, alpha);
+			GLRenderer.modelM4f().translate(x, y, 0);
+			GLRenderer.modelM4f().scale((float) scaleX, (float) scaleY, 1);
+			itemModel.renderGui(GLRenderer.getTessellator(), null, itemStack, 0, 0, LightIndexHelper.lightIndex2f(15, 15), 1);
 		}
 
 
-
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		Lighting.disable();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glPopMatrix();
+		GLRenderer.disableState(State.DEPTH_TEST);
+		GLRenderer.popFrame();
 	}
 }

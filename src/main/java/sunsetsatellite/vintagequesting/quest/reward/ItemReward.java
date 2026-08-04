@@ -27,10 +27,10 @@ public class ItemReward extends Reward {
 
 	@Override
 	public void give(Player player) {
-		if(!redeemed){
+		if (!redeemed) {
 			ItemStack stack = item.copy();
-			player.inventory.insertItem(stack,true);
-			if(stack.stackSize > 0){
+			player.inventory.insertItem(stack, true);
+			if (stack.stackSize > 0) {
 				player.dropPlayerItem(stack);
 			}
 			redeemed = true;
@@ -49,7 +49,7 @@ public class ItemReward extends Reward {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int width) {
-		renderables.add(new StringElement(mc,"Item Reward:",0xFFFFFFFF));
-		renderables.add(new GuiItemRewardSlot(mc,width / 2 - 38,24, this));
+		renderables.add(new StringElement(mc, "Item Reward:", 0xFFFFFFFF));
+		renderables.add(new GuiItemRewardSlot(mc, width / 2 - 38, 24, this));
 	}
 }

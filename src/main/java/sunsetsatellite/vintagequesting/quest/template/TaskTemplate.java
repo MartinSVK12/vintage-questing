@@ -1,6 +1,6 @@
 package sunsetsatellite.vintagequesting.quest.template;
 
-import net.minecraft.core.lang.I18n;
+import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.quest.Task;
 
@@ -12,15 +12,15 @@ public abstract class TaskTemplate {
 	public TaskTemplate(String id, String typeName) {
 		this.typeName = typeName;
 		this.id = id;
-		VintageQuesting.TASKS.register(id,this);
+		VintageQuesting.TASKS.register(id, this);
 	}
 
 	public String getTypeName() {
 		return typeName;
 	}
 
-	public String getTranslatedTypeName(){
-		return I18n.getInstance().translateNameKey(typeName);
+	public String getTranslatedTypeName() {
+		return Catalyst.translateNameKey(typeName);
 	}
 
 	public abstract TaskTemplate copy();

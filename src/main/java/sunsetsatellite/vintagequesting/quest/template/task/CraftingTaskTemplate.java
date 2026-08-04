@@ -14,16 +14,16 @@ public class CraftingTaskTemplate extends TaskTemplate {
 	protected Task cache;
 
 	public CraftingTaskTemplate(String id, ItemStack stack) {
-		super(id,"type.task.vq.crafting");
+		super(id, "type.task.vq.crafting");
 		this.requirement = stack;
 	}
 
 	@Override
 	public TaskTemplate copy() {
-		return new CraftingTaskTemplate(id,requirement);
+		return new CraftingTaskTemplate(id, requirement);
 	}
 
-	public ItemStack getStack(){
+	public ItemStack getStack() {
 		return requirement;
 	}
 
@@ -61,7 +61,11 @@ public class CraftingTaskTemplate extends TaskTemplate {
 		return canConsume;
 	}
 
-	public boolean checksNbt() {return checkNbt;}
+	public boolean checksNbt() {
+		return checkNbt;
+	}
 
-	public boolean ignoresMeta() {return ignoreMeta;}
+	public boolean ignoresMeta() {
+		return ignoreMeta;
+	}
 }

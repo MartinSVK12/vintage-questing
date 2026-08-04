@@ -4,7 +4,7 @@ import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Global;
 import net.minecraft.core.item.IItemConvertible;
-import net.minecraft.core.lang.I18n;
+import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.gui.QuestChapterPage;
 import sunsetsatellite.vintagequesting.gui.QuestToast;
@@ -52,20 +52,20 @@ public class Quest {
 		for (TaskTemplate task : template.getTasks()) {
 			taskList.add(task.getInstance());
 		}
-        for (RewardTemplate reward : template.getRewards()) {
-            rewardList.add(reward.getInstance());
-        }
-        this.tasks = taskList;
-        this.preRequisites = preRequisiteList;
-        this.rewards = rewardList;
+		for (RewardTemplate reward : template.getRewards()) {
+			rewardList.add(reward.getInstance());
+		}
+		this.tasks = taskList;
+		this.preRequisites = preRequisiteList;
+		this.rewards = rewardList;
 	}
 
-	public void setupPrerequisites(){
+	public void setupPrerequisites() {
 		this.preRequisites = new ArrayList<>();
 		for (QuestTemplate preRequisite : template.getPreRequisites()) {
 			for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
 				Quest quest = chapter.getQuest(preRequisite);
-				if(quest != null){
+				if (quest != null) {
 					this.preRequisites.add(quest);
 				}
 			}
@@ -108,7 +108,7 @@ public class Quest {
 	}
 
 	public String getTranslatedName() {
-		return I18n.getInstance().translateNameKey(name);
+		return Catalyst.translateNameKey(name);
 	}
 
 	public Quest setName(String name) {
@@ -121,7 +121,7 @@ public class Quest {
 	}
 
 	public String getTranslatedDescription() {
-		return I18n.getInstance().translateDescKey(description);
+		return Catalyst.translateDescKey(description);
 	}
 
 	public Quest setDescription(String description) {
@@ -205,34 +205,32 @@ public class Quest {
 		return getRewards().stream().allMatch(Reward::isRedeemed);
 	}
 
-	public boolean isCompleted(){
-		if(!preRequisitesCompleted()) return false;
-		switch (taskLogic){
+	public boolean isCompleted() {
+		if (!preRequisitesCompleted()) return false;
+		switch (taskLogic) {
 			case AND:
-				if (tasks.stream().allMatch(Task::isCompleted)){
+				if (tasks.stream().allMatch(Task::isCompleted)) {
 					if (!complete && !Global.isServer) {
 						Minecraft.getMinecraft().guiToasts.addToast(new QuestToast(this));
 						complete = true;
 					}
 					return true;
-				}
-				else return complete = false;
+				} else return complete = false;
 			case OR:
-				if (tasks.stream().anyMatch(Task::isCompleted)){
+				if (tasks.stream().anyMatch(Task::isCompleted)) {
 					if (!complete && !Global.isServer) {
 						Minecraft.getMinecraft().guiToasts.addToast(new QuestToast(this));
 						complete = true;
 					}
 					return true;
-				}
-				else return complete = false;
+				} else return complete = false;
 		}
 		return complete = false;
 	}
 
-	public boolean preRequisitesCompleted(){
-		if(preRequisites.isEmpty()) return true;
-		switch (taskLogic){
+	public boolean preRequisitesCompleted() {
+		if (preRequisites.isEmpty()) return true;
+		switch (taskLogic) {
 			case AND:
 				return preRequisites.stream().allMatch(Quest::isCompleted);
 			case OR:
@@ -241,7 +239,7 @@ public class Quest {
 		return false;
 	}
 
-	public long numberOfCompletedTasks(){
+	public long numberOfCompletedTasks() {
 		return tasks.stream().filter(Task::isCompleted).count();
 	}
 

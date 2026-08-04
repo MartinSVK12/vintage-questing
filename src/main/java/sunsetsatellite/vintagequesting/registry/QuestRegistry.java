@@ -9,7 +9,7 @@ public class QuestRegistry extends Registry<QuestTemplate> {
 
 	@Override
 	public void register(String key, QuestTemplate item) {
-		if(!Objects.equals(item.getId(), key)){
+		if (!Objects.equals(item.getId(), key)) {
 			throw new IllegalArgumentException("Identifiers don't match!");
 		}
 		super.register(key, item);

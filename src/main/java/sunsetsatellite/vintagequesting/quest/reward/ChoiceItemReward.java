@@ -22,25 +22,25 @@ public class ChoiceItemReward extends Reward {
 	}
 
 	public ItemStack getChosenStack() {
-		if(chosen == null) return null;
+		if (chosen == null) return null;
 		return chosen.copy();
 	}
 
-	public ItemStack getOption(int index){
+	public ItemStack getOption(int index) {
 		return stacks.get(index);
 	}
 
-	public void choose(int index){
+	public void choose(int index) {
 		chosen = stacks.get(index);
 	}
 
 	@Override
 	public void give(Player player) {
-		if(chosen == null) return;
-		if(!redeemed){
+		if (chosen == null) return;
+		if (!redeemed) {
 			ItemStack stack = chosen.copy();
-			player.inventory.insertItem(stack,true);
-			if(stack.stackSize > 0){
+			player.inventory.insertItem(stack, true);
+			if (stack.stackSize > 0) {
 				player.dropPlayerItem(stack);
 			}
 			redeemed = true;
@@ -59,7 +59,7 @@ public class ChoiceItemReward extends Reward {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int width) {
-		renderables.add(new StringElement(mc,"Choice Item Reward:",0xFFFFFFFF));
+		renderables.add(new StringElement(mc, "Choice Item Reward:", 0xFFFFFFFF));
 		//for (int i = 0; i < stacks.size(); i++) {
 		//	renderables.add(new GuiChoiceItemRewardSlot(mc,width / 2 - 38,24, this,i));
 		//}

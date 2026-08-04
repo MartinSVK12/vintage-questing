@@ -25,7 +25,7 @@ public class KillTask extends Task {
 	}
 
 	public void addProgress(Class<? extends Entity> entity) {
-		if(entity == requiredClass){
+		if (entity == requiredClass) {
 			progress++;
 		}
 	}
@@ -68,7 +68,7 @@ public class KillTask extends Task {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width) {
-		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName(), 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, (i + 1) + ". " + this.getTranslatedTypeName(), 0xFFFFFFFF));
 		renderables.add(new GuiKillTaskSlot(mc, width / 2 - 48, 24, this));
 	}
 

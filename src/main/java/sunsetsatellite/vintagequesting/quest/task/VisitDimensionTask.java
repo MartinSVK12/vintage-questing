@@ -14,7 +14,7 @@ import java.util.List;
 
 public class VisitDimensionTask extends Task {
 
-    protected boolean visited = false;
+	protected boolean visited = false;
 	protected Dimension dimension;
 
 	public VisitDimensionTask(VisitDimensionTaskTemplate template) {
@@ -23,8 +23,8 @@ public class VisitDimensionTask extends Task {
 	}
 
 	public void check(Player player) {
-		if(!visited) visited = player.dimension == dimension.id;
-    }
+		if (!visited) visited = player.dimension == dimension.id;
+	}
 
 	@Override
 	public boolean isCompleted() {
@@ -52,7 +52,7 @@ public class VisitDimensionTask extends Task {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width) {
-		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName(), 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, (i + 1) + ". " + this.getTranslatedTypeName(), 0xFFFFFFFF));
 		renderables.add(new GuiVisitDImensionTaskSlot(mc, width / 2 - 48, 20, this));
 	}
 

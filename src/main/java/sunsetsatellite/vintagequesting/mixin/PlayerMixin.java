@@ -20,14 +20,14 @@ import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
 
 import java.util.Map;
 
-@Mixin(value = Player.class,remap = false)
+@Mixin(value = Player.class, remap = false)
 public class PlayerMixin {
 
 	@Unique
-	private final Player thisAs = (Player) ((Object)this);
+	private final Player thisAs = (Player) ((Object) this);
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void init(World world, CallbackInfo ci){
+	public void init(World world, CallbackInfo ci) {
 		VintageQuesting.LOGGER.info("Initializing quests...");
 		resetAll();
 	}
@@ -37,7 +37,7 @@ public class PlayerMixin {
 		resetAll();
 
 		CompoundTag chapters = tag.getCompoundOrDefault("QuestingChapters", null);
-		if(chapters != null) {
+		if (chapters != null) {
 			Map<String, Tag<?>> chapterMap = chapters.getValue();
 			if (chapters.getValues().isEmpty()) {
 				//VintageQuesting.LOGGER.warn("No data. Loading defaults...");
@@ -109,7 +109,7 @@ public class PlayerMixin {
 	@Unique
 	public void resetChapter(String id) {
 		QuestChapterPage chapter = VintageQuesting.CHAPTERS.getItem(id);
-		if(chapter == null) return;
+		if (chapter == null) return;
 		chapter.reset();
 		for (QuestTemplate template : chapter.getQuestTemplates()) {
 			for (RewardTemplate reward : template.getRewards()) {
@@ -124,7 +124,7 @@ public class PlayerMixin {
 	@Unique
 	public void resetQuest(String id) {
 		QuestTemplate quest = VintageQuesting.QUESTS.getItem(id);
-		if(quest == null) return;
+		if (quest == null) return;
 		for (RewardTemplate reward : quest.getRewards()) {
 			reward.reset();
 		}
@@ -133,7 +133,7 @@ public class PlayerMixin {
 		}
 	}
 
-	@Inject(method = "addAdditionalSaveData",at = @At("TAIL"))
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
 		CompoundTag chaptersTag = new CompoundTag();
 		for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
@@ -142,27 +142,27 @@ public class PlayerMixin {
 				CompoundTag questTag = new CompoundTag();
 				CompoundTag tasksTag = new CompoundTag();
 				CompoundTag rewardsTag = new CompoundTag();
-				questTag.putCompound("Tasks",tasksTag);
-				questTag.putCompound("Rewards",rewardsTag);
+				questTag.putCompound("Tasks", tasksTag);
+				questTag.putCompound("Rewards", rewardsTag);
 				quest.writeToNbt(questTag);
 				for (Task task : quest.getTasks()) {
 					CompoundTag taskTag = new CompoundTag();
 					task.writeToNbt(taskTag);
-					tasksTag.putCompound(task.getTemplate().getId(),taskTag);
+					tasksTag.putCompound(task.getTemplate().getId(), taskTag);
 				}
 				for (Reward reward : quest.getRewards()) {
 					CompoundTag rewardTag = new CompoundTag();
 					reward.writeToNbt(rewardTag);
-					rewardsTag.putCompound(reward.getTemplate().getId(),rewardTag);
+					rewardsTag.putCompound(reward.getTemplate().getId(), rewardTag);
 				}
-				chapterTag.putCompound(quest.getTemplate().getId(),questTag);
+				chapterTag.putCompound(quest.getTemplate().getId(), questTag);
 			}
-			chaptersTag.putCompound(chapter.getId(),chapterTag);
+			chaptersTag.putCompound(chapter.getId(), chapterTag);
 		}
 		tag.putCompound("QuestingChapters", chaptersTag);
 	}
 
-	@Inject(method = "readAdditionalSaveData",at = @At("TAIL"))
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	public void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
 		loadData(tag);
 	}

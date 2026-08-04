@@ -30,17 +30,17 @@ public class RetrievalTask extends Task {
 	}
 
 	public int setProgress(ItemStack stack, Player player) {
-		if(stack == null) return -1;
-		if(stack.isItemEqual(requirement) || (ignoreMeta && stack.itemID == requirement.itemID)){
-			if(checksNbt && !(stack.getData().equals(requirement.getData()))){
+		if (stack == null) return -1;
+		if (stack.isItemEqual(requirement) || (ignoreMeta && stack.itemID == requirement.itemID)) {
+			if (checksNbt && !(stack.getData().equals(requirement.getData()))) {
 				return -1;
 			}
-			if(canConsume){
-				int amount = Math.min(stack.stackSize,requirement.stackSize - progress);
+			if (canConsume) {
+				int amount = Math.min(stack.stackSize, requirement.stackSize - progress);
 				int j = 0;
 				for (int i = 0; i < amount; i++) {
 					boolean b = player.inventory.consumeInventoryItem(stack.itemID);
-					if(b) j++;
+					if (b) j++;
 				}
 				progress += j;
 			} else {
@@ -52,7 +52,7 @@ public class RetrievalTask extends Task {
 	}
 
 	public void resetProgress() {
-		if(!canConsume) progress = 0;
+		if (!canConsume) progress = 0;
 	}
 
 	public ItemStack getStack() {
@@ -85,7 +85,7 @@ public class RetrievalTask extends Task {
 
 	@Override
 	public void renderSlot(Minecraft mc, List<IRenderable> renderables, int i, int width) {
-		renderables.add(new StringElement(mc, (i+1)+". "+this.getTranslatedTypeName()+" | Consume: "+ (this.canConsume() ? TextFormatting.RED : TextFormatting.WHITE) +  this.canConsume(), 0xFFFFFFFF));
+		renderables.add(new StringElement(mc, (i + 1) + ". " + this.getTranslatedTypeName() + " | Consume: " + (this.canConsume() ? TextFormatting.RED : TextFormatting.WHITE) + this.canConsume(), 0xFFFFFFFF));
 		renderables.add(new GuiRetrievalTaskSlot(mc, width / 2 - 48, 24, this));
 	}
 
@@ -103,7 +103,11 @@ public class RetrievalTask extends Task {
 		return canConsume;
 	}
 
-	public boolean checksNbt() {return checksNbt;}
+	public boolean checksNbt() {
+		return checksNbt;
+	}
 
-	public boolean ignoresMeta() {return ignoreMeta;}
+	public boolean ignoresMeta() {
+		return ignoreMeta;
+	}
 }

@@ -29,7 +29,7 @@ public class QuestToast implements IToastable {
 	}
 
 	@Override
-	public int nameColor(long l) {
+	public int titleColor(long runtime) {
 		return 0xffffff00;
 	}
 
@@ -39,7 +39,7 @@ public class QuestToast implements IToastable {
 	}
 
 	@Override
-	public int descriptionColor(long l) {
+	public int messageColor(long runtime) {
 		return 0xffffffff;
 	}
 

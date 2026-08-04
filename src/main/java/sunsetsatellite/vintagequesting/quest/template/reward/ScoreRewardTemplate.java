@@ -9,8 +9,8 @@ public class ScoreRewardTemplate extends RewardTemplate {
 	protected int amount;
 	protected Reward cache;
 
-	public ScoreRewardTemplate(String id, int amount){
-        super(id);
+	public ScoreRewardTemplate(String id, int amount) {
+		super(id);
 
 		this.amount = amount;
 	}

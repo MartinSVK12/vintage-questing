@@ -12,10 +12,10 @@ public class ChoiceItemRewardTemplate extends RewardTemplate {
 	protected List<ItemStack> stacks;
 	protected Reward cache;
 
-	public ChoiceItemRewardTemplate(String id, List<ItemStack> stacks){
-        super(id);
+	public ChoiceItemRewardTemplate(String id, List<ItemStack> stacks) {
+		super(id);
 
-        this.stacks = stacks;
+		this.stacks = stacks;
 	}
 
 	public List<ItemStack> getStacks() {

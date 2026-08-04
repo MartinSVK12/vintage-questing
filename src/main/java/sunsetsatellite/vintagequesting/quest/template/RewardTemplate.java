@@ -9,7 +9,7 @@ public abstract class RewardTemplate {
 
 	protected RewardTemplate(String id) {
 		this.id = id;
-		VintageQuesting.REWARDS.register(id,this);
+		VintageQuesting.REWARDS.register(id, this);
 	}
 
 	public String getId() {
@@ -20,5 +20,5 @@ public abstract class RewardTemplate {
 
 	public abstract Reward getInstanceUnique();
 
-    public abstract void reset();
+	public abstract void reset();
 }

@@ -35,9 +35,9 @@ public class ArgumentTypeQuestId implements ArgumentType<QuestTemplate> {
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		for(QuestTemplate questTemplate : getQuests()){
+		for (QuestTemplate questTemplate : getQuests()) {
 			if (questTemplate.getId().startsWith(builder.getRemaining())) {
-				builder.suggest("\""+questTemplate.getId()+"\"");
+				builder.suggest("\"" + questTemplate.getId() + "\"");
 			}
 		}
 

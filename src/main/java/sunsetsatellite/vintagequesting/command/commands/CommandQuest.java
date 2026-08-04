@@ -2,7 +2,6 @@ package sunsetsatellite.vintagequesting.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeBool;
-import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -23,18 +22,27 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.<CommandSource, Boolean>argument("deep", ArgumentTypeBool.bool())
 					.executes(context ->
 					{
-						if (context.getArgument("deep", Boolean.class)){
-							Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+						if (context.getArgument("deep", Boolean.class)) {
+							Player sender = context.getSource().getSender();
+							if (sender == null) {
+								return 0;
+							}
 							return CommandLogicQuest.completeQuestDeep(sender, context.getArgument("questId", QuestTemplate.class));
 						} else {
-							Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+							Player sender = context.getSource().getSender();
+							if (sender == null) {
+								return 0;
+							}
 							return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestTemplate.class));
 						}
 					})
 				)
 				.executes(context ->
 					{
-						Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+						Player sender = context.getSource().getSender();
+						if (sender == null) {
+							return 0;
+						}
 						return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestTemplate.class));
 					}
 				)
@@ -51,7 +59,10 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.<CommandSource, QuestTemplate>argument("questId", ArgumentTypeQuestId.questId())
 					.executes(context ->
 						{
-							Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+							Player sender = context.getSource().getSender();
+							if (sender == null) {
+								return 0;
+							}
 							return CommandLogicQuest.resetQuest(sender, context.getArgument("questId", QuestTemplate.class));
 						}
 					)
@@ -62,7 +73,10 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 				.then(ArgumentBuilderRequired.<CommandSource, QuestChapterPage>argument("chapter", ArgumentTypeQuestChapterPage.chapter())
 					.executes(context ->
 						{
-							Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+							Player sender = context.getSource().getSender();
+							if (sender == null) {
+								return 0;
+							}
 							return CommandLogicQuest.resetChapter(sender, context.getArgument("chapter", QuestChapterPage.class));
 						}
 					)
@@ -72,7 +86,10 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 			.then(ArgumentBuilderLiteral.<CommandSource>literal("all")
 				.executes(context ->
 					{
-						Player sender = context.getSource().getSender(); if(sender == null){return 0;}
+						Player sender = context.getSource().getSender();
+						if (sender == null) {
+							return 0;
+						}
 						return CommandLogicQuest.resetAll(sender);
 					}
 				)
@@ -86,7 +103,7 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 	@Override
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		VintageQuesting.LOGGER.info("Command registered: quest");
-		ArgumentBuilderLiteral<CommandSource> builder = ArgumentBuilderLiteral.<CommandSource>literal("quest");
+		ArgumentBuilderLiteral<CommandSource> builder = ArgumentBuilderLiteral.literal("quest");
 
 		questComplete(builder);
 		questReset(builder);

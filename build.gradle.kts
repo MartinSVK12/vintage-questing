@@ -4,6 +4,7 @@ import groovy.namespace.QName
 import groovy.util.Node
 import groovy.xml.XmlParser
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.net.URL
 
 plugins {
@@ -274,7 +275,7 @@ publishing {
 }
 
 fun checkVersion(group: String, name: String, version: String): Boolean {
-	return try {
+	return !(rootProject.property("check_versions") as String).toBoolean() || try {
 		val xml = URL("https://maven.thesignalumproject.net/releases/$group/$name/maven-metadata.xml").readText()
 		val metadata = XmlParser().parseText(xml)
 
@@ -286,7 +287,8 @@ fun checkVersion(group: String, name: String, version: String): Boolean {
 		} else {
 			true
 		}
-	} catch (ignored: FileNotFoundException) {
+	} catch (e: IOException) {
+		System.err.println(e.message)
 		true
 	}
 }

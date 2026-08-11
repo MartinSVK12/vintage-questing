@@ -9,16 +9,16 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandManager;
 import net.minecraft.core.net.command.CommandSource;
 import sunsetsatellite.vintagequesting.VintageQuesting;
-import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestChapterPage;
+import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestChapter;
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestId;
 import sunsetsatellite.vintagequesting.command.commandlogic.CommandLogicQuest;
-import sunsetsatellite.vintagequesting.gui.QuestChapterPage;
-import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
+import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.data.QuestData;
 
 public class CommandQuest implements CommandManager.CommandRegistry {
 	public static ArgumentBuilder<CommandSource, ArgumentBuilderLiteral<CommandSource>> questComplete(ArgumentBuilder<CommandSource, ArgumentBuilderLiteral<CommandSource>> builder) {
 		builder.then(ArgumentBuilderLiteral.<CommandSource>literal("complete").requires(CommandSource::hasAdmin)
-			.then(ArgumentBuilderRequired.<CommandSource, QuestTemplate>argument("questId", ArgumentTypeQuestId.questId())
+			.then(ArgumentBuilderRequired.<CommandSource, QuestData>argument("questId", ArgumentTypeQuestId.questId())
 				.then(ArgumentBuilderRequired.<CommandSource, Boolean>argument("deep", ArgumentTypeBool.bool())
 					.executes(context ->
 					{
@@ -27,13 +27,13 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 							if (sender == null) {
 								return 0;
 							}
-							return CommandLogicQuest.completeQuestDeep(sender, context.getArgument("questId", QuestTemplate.class));
+							return CommandLogicQuest.completeQuestDeep(sender, context.getArgument("questId", QuestData.class));
 						} else {
 							Player sender = context.getSource().getSender();
 							if (sender == null) {
 								return 0;
 							}
-							return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestTemplate.class));
+							return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestData.class));
 						}
 					})
 				)
@@ -43,7 +43,7 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 						if (sender == null) {
 							return 0;
 						}
-						return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestTemplate.class));
+						return CommandLogicQuest.completeQuest(sender, context.getArgument("questId", QuestData.class));
 					}
 				)
 			)
@@ -56,28 +56,28 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 		builder.then(ArgumentBuilderLiteral.<CommandSource>literal("reset").requires(CommandSource::hasAdmin)
 			// Quest
 			.then(ArgumentBuilderLiteral.<CommandSource>literal("quest")
-				.then(ArgumentBuilderRequired.<CommandSource, QuestTemplate>argument("questId", ArgumentTypeQuestId.questId())
+				.then(ArgumentBuilderRequired.<CommandSource, QuestData>argument("questId", ArgumentTypeQuestId.questId())
 					.executes(context ->
 						{
 							Player sender = context.getSource().getSender();
 							if (sender == null) {
 								return 0;
 							}
-							return CommandLogicQuest.resetQuest(sender, context.getArgument("questId", QuestTemplate.class));
+							return CommandLogicQuest.resetQuest(sender, context.getArgument("questId", QuestData.class));
 						}
 					)
 				)
 			)
 			// Chapter
 			.then(ArgumentBuilderLiteral.<CommandSource>literal("chapter")
-				.then(ArgumentBuilderRequired.<CommandSource, QuestChapterPage>argument("chapter", ArgumentTypeQuestChapterPage.chapter())
+				.then(ArgumentBuilderRequired.<CommandSource, Chapter>argument("chapter", ArgumentTypeQuestChapter.chapter())
 					.executes(context ->
 						{
 							Player sender = context.getSource().getSender();
 							if (sender == null) {
 								return 0;
 							}
-							return CommandLogicQuest.resetChapter(sender, context.getArgument("chapter", QuestChapterPage.class));
+							return CommandLogicQuest.resetChapter(sender, context.getArgument("chapter", Chapter.class));
 						}
 					)
 				)

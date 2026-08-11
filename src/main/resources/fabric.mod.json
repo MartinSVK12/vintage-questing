@@ -17,7 +17,7 @@
 	},
 	"icon": "icon.png",
 	"license": "MIT",
-	"environment": "client",
+	"environment": "*",
 	"entrypoints": {
 		"main": [
 			"sunsetsatellite.vintagequesting.VintageQuesting"

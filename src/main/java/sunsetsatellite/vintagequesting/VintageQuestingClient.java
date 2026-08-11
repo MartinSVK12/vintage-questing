@@ -8,12 +8,16 @@ import net.minecraft.client.input.InputDevice;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
+import sunsetsatellite.vintagequesting.core.registry.ChapterPageRegistry;
+import sunsetsatellite.vintagequesting.core.registry.ChapterRegistry;
 import turniplabs.halplibe.event.defs.ClientEvents;
 import turniplabs.halplibe.util.dependency.Key;
 
 public class VintageQuestingClient implements ClientModInitializer {
 
 	public static KeyBinding keyOpenQuestbook = new KeyBinding("key.vintagequesting.openQuestbook").bind(InputDevice.keyboard, Keyboard.KEY_GRAVE);
+
+	public static ChapterPageRegistry CHAPTER_PAGES = new ChapterPageRegistry();
 
 	@Override
 	public void onInitializeClient() {

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.VintageQuestingClient;
-import sunsetsatellite.vintagequesting.gui.ScreenQuestbook;
+import sunsetsatellite.vintagequesting.client.gui.ScreenQuestbook;
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = Minecraft.class, remap = false)
@@ -44,7 +44,7 @@ public abstract class MinecraftMixin {
 		boolean control = (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157));
 		if (debounce <= 0) {
 			if (VintageQuestingClient.keyOpenQuestbook.isPressed() && currentScreen == null) {
-				displayScreen(new ScreenQuestbook(null, VintageQuesting.CHAPTERS.getItemByNumericId(0)));
+				displayScreen(new ScreenQuestbook(null, VintageQuestingClient.CHAPTER_PAGES.getItemByNumericId(0)));
 				debounce = 10;
 			}
 		}

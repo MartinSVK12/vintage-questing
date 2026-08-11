@@ -2,34 +2,66 @@ package sunsetsatellite.vintagequesting.mixin;
 
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.Tag;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.world.World;
+import net.minecraft.server.entity.player.PlayerServer;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.vintagequesting.VintageQuesting;
-import sunsetsatellite.vintagequesting.gui.QuestChapterPage;
-import sunsetsatellite.vintagequesting.quest.Quest;
-import sunsetsatellite.vintagequesting.quest.Reward;
-import sunsetsatellite.vintagequesting.quest.Task;
-import sunsetsatellite.vintagequesting.quest.template.QuestTemplate;
-import sunsetsatellite.vintagequesting.quest.template.RewardTemplate;
-import sunsetsatellite.vintagequesting.quest.template.TaskTemplate;
+import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.Quest;
+import sunsetsatellite.vintagequesting.core.Reward;
+import sunsetsatellite.vintagequesting.core.Task;
+import sunsetsatellite.vintagequesting.core.data.QuestData;
+import sunsetsatellite.vintagequesting.core.data.RewardData;
+import sunsetsatellite.vintagequesting.core.data.TaskData;
+import sunsetsatellite.vintagequesting.mp.message.NetworkMessageQuestSync;
+import turniplabs.halplibe.helper.EnvironmentHelper;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Mixin(value = Player.class, remap = false)
 public class PlayerMixin {
 
+	@Shadow
+	@Final
+	@NotNull
+	public ContainerInventory inventory;
 	@Unique
 	private final Player thisAs = (Player) ((Object) this);
+
+	@Unique
+	private List<NetworkMessageQuestSync> questPackets = new ArrayList<>();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	public void init(World world, CallbackInfo ci) {
 		VintageQuesting.LOGGER.info("Initializing quests...");
 		resetAll();
+	}
+
+	@Environment(EnvType.SERVER)
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void tick(CallbackInfo ci){
+		if(thisAs instanceof PlayerServer playerServer){
+			if(playerServer.playerNetServerHandler != null){
+				for (NetworkMessageQuestSync packet : questPackets) {
+					NetworkHandler.sendToPlayer(thisAs, packet);
+				}
+				questPackets.clear();
+			}
+		}
 	}
 
 	@Unique
@@ -41,7 +73,7 @@ public class PlayerMixin {
 			Map<String, Tag<?>> chapterMap = chapters.getValue();
 			if (chapters.getValues().isEmpty()) {
 				//VintageQuesting.LOGGER.warn("No data. Loading defaults...");
-				for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
+				for (Chapter chapter : VintageQuesting.CHAPTERS) {
 					//questGroup.quests.addAll(chapter.getQuests());
 				}
 				return;
@@ -50,32 +82,35 @@ public class PlayerMixin {
 				String id = entry.getKey();
 				Tag<?> mapTag = entry.getValue();
 				CompoundTag chapterTag = ((CompoundTag) mapTag);
-				QuestChapterPage chapterPage = VintageQuesting.CHAPTERS.getItem(id);
-				if (chapterPage != null) {
-					for (Quest quest : chapterPage.getQuests()) {
-						CompoundTag questTag = chapterTag.getCompoundOrDefault(quest.getTemplate().getId(), null);
+				Chapter chapter = VintageQuesting.CHAPTERS.getItem(id);
+				if (chapter != null) {
+					for (Quest quest : chapter.getQuests()) {
+						CompoundTag questTag = chapterTag.getCompoundOrDefault(quest.data.getId(), null);
 						if (questTag != null) {
+							if(EnvironmentHelper.isMultiplayerServer()){
+								questPackets.add(new NetworkMessageQuestSync(chapter.getId(), questTag));
+							}
 							CompoundTag tasks = questTag.getCompound("Tasks");
 							CompoundTag rewards = questTag.getCompound("Rewards");
 							quest.readFromNbt(questTag);
 							for (Reward reward : quest.getRewards()) {
-								CompoundTag rewardTag = rewards.getCompoundOrDefault(reward.getTemplate().getId(), null);
+								CompoundTag rewardTag = rewards.getCompoundOrDefault(reward.data.getId(), null);
 								if (rewardTag != null) {
 									reward.readFromNbt(rewardTag);
 								} else {
-									VintageQuesting.LOGGER.error("No reward with id: " + reward.getTemplate().getId());
+									VintageQuesting.LOGGER.error("No reward with id: " + reward.data.getId());
 								}
 							}
 							for (Task task : quest.getTasks()) {
-								CompoundTag taskTag = tasks.getCompoundOrDefault(task.getTemplate().getId(), null);
+								CompoundTag taskTag = tasks.getCompoundOrDefault(task.data.getId(), null);
 								if (taskTag != null) {
 									task.readFromNbt(taskTag);
 								} else {
-									VintageQuesting.LOGGER.error("No task with id: " + task.getTemplate().getId());
+									VintageQuesting.LOGGER.error("No task with id: " + task.data.getId());
 								}
 							}
 						} else {
-							VintageQuesting.LOGGER.error("No quest with id: " + quest.getTemplate().getId());
+							VintageQuesting.LOGGER.error("No quest with id: " + quest.data.getId());
 						}
 					}
 					VintageQuesting.LOGGER.info("Loaded saved data for chapter with id: " + id);
@@ -85,7 +120,7 @@ public class PlayerMixin {
 			}
 		} else {
 			//VintageQuesting.LOGGER.warn("No data. Loading defaults...");
-			for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
+			for (Chapter chapter : VintageQuesting.CHAPTERS) {
 				//questGroup.quests.addAll(chapter.getQuests());
 			}
 		}
@@ -93,14 +128,14 @@ public class PlayerMixin {
 
 	@Unique
 	public void resetAll() {
-		for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
+		for (Chapter chapter : VintageQuesting.CHAPTERS) {
 			chapter.reset();
-			for (QuestTemplate template : chapter.getQuestTemplates()) {
-				for (RewardTemplate reward : template.getRewards()) {
-					reward.reset();
+			for (QuestData template : chapter.getQuestData()) {
+				for (RewardData reward : template.getRewards()) {
+					reward.clearInstance();
 				}
-				for (TaskTemplate task : template.getTasks()) {
-					task.reset();
+				for (TaskData task : template.getTasks()) {
+					task.clearInstance();
 				}
 			}
 		}
@@ -108,35 +143,35 @@ public class PlayerMixin {
 
 	@Unique
 	public void resetChapter(String id) {
-		QuestChapterPage chapter = VintageQuesting.CHAPTERS.getItem(id);
+		Chapter chapter = VintageQuesting.CHAPTERS.getItem(id);
 		if (chapter == null) return;
 		chapter.reset();
-		for (QuestTemplate template : chapter.getQuestTemplates()) {
-			for (RewardTemplate reward : template.getRewards()) {
-				reward.reset();
+		for (QuestData template : chapter.getQuestData()) {
+			for (RewardData reward : template.getRewards()) {
+				reward.clearInstance();
 			}
-			for (TaskTemplate task : template.getTasks()) {
-				task.reset();
+			for (TaskData task : template.getTasks()) {
+				task.clearInstance();
 			}
 		}
 	}
 
 	@Unique
 	public void resetQuest(String id) {
-		QuestTemplate quest = VintageQuesting.QUESTS.getItem(id);
+		QuestData quest = VintageQuesting.QUESTS.getItem(id);
 		if (quest == null) return;
-		for (RewardTemplate reward : quest.getRewards()) {
-			reward.reset();
+		for (RewardData reward : quest.getRewards()) {
+			reward.clearInstance();
 		}
-		for (TaskTemplate task : quest.getTasks()) {
-			task.reset();
+		for (TaskData task : quest.getTasks()) {
+			task.clearInstance();
 		}
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
 		CompoundTag chaptersTag = new CompoundTag();
-		for (QuestChapterPage chapter : VintageQuesting.CHAPTERS) {
+		for (Chapter chapter : VintageQuesting.CHAPTERS) {
 			CompoundTag chapterTag = new CompoundTag();
 			for (Quest quest : chapter.getQuests()) {
 				CompoundTag questTag = new CompoundTag();
@@ -148,14 +183,14 @@ public class PlayerMixin {
 				for (Task task : quest.getTasks()) {
 					CompoundTag taskTag = new CompoundTag();
 					task.writeToNbt(taskTag);
-					tasksTag.putCompound(task.getTemplate().getId(), taskTag);
+					tasksTag.putCompound(task.data.getId(), taskTag);
 				}
 				for (Reward reward : quest.getRewards()) {
 					CompoundTag rewardTag = new CompoundTag();
 					reward.writeToNbt(rewardTag);
-					rewardsTag.putCompound(reward.getTemplate().getId(), rewardTag);
+					rewardsTag.putCompound(reward.data.getId(), rewardTag);
 				}
-				chapterTag.putCompound(quest.getTemplate().getId(), questTag);
+				chapterTag.putCompound(quest.data.getId(), questTag);
 			}
 			chaptersTag.putCompound(chapter.getId(), chapterTag);
 		}

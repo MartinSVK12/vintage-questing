@@ -1,6 +1,7 @@
 package sunsetsatellite.vintagequesting.util;
 
-import sunsetsatellite.vintagequesting.quest.Quest;
+
+import sunsetsatellite.vintagequesting.core.Quest;
 
 import java.util.ArrayList;
 

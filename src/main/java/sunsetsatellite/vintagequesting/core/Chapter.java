@@ -3,38 +3,30 @@ package sunsetsatellite.vintagequesting.core;
 import net.minecraft.core.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sunsetsatellite.vintagequesting.VintageQuesting;
+import sunsetsatellite.vintagequesting.core.data.ChapterData;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
+import sunsetsatellite.vintagequesting.util.QuestTeam;
 
 import java.util.*;
 
-public abstract class Chapter {
+public class Chapter {
+	public ChapterData data;
+	public QuestTeam team;
 	public final Map<QuestData, Quest> entryMap = new HashMap<>();
 	public final List<Quest> questList = new ArrayList<>();
 
-	public final String id;
-	public final int orderId;
-
-	public abstract @NotNull String getName();
-
-	public abstract @NotNull String getDescription();
-
-	public Chapter(String id) {
-		VintageQuesting.CHAPTERS.register(id, this);
-		this.id = id;
-		this.orderId = 0;
+	public @NotNull String getName() {
+		return data.getName();
 	}
 
-	public Chapter(String id, int orderId) {
-		VintageQuesting.CHAPTERS.register(id, this);
-		this.id = id;
-		this.orderId = orderId;
+	public @NotNull String getDescription() {
+		return data.getDescription();
 	}
 
-	public void addQuest(@NotNull QuestData quest) {
-		Quest entry = new Quest(quest, this);
-		questList.add(entry);
-		entryMap.put(quest, entry);
+	public Chapter(ChapterData data, QuestTeam team) {
+		this.data = data;
+		this.team = team;
+		data.questList.forEach(this::addQuest);
 	}
 
 	public @Nullable Quest getQuest(QuestData quest) {
@@ -45,24 +37,35 @@ public abstract class Chapter {
 		return entryMap.containsKey(quest);
 	}
 
+	public Quest addQuest(QuestData data) {
+		Quest quest = new Quest(data, this);
+		entryMap.put(data, quest);
+		questList.add(quest);
+		return quest;
+	}
+
 	public @NotNull List<Quest> getQuests() {
 		return questList;
 	}
 
-	public @NotNull Set<QuestData> getQuestData() {
-		return entryMap.keySet();
+	public @NotNull List<QuestData> getQuestData() {
+		return data.getQuestList();
 	}
 
-	public abstract @NotNull ItemStack getIcon();
+	public @NotNull ItemStack getIcon() {
+		return data.getIcon();
+	}
 
-	public abstract Quest getStartingQuest();
+	public Quest getStartingQuest() {
+		return getQuest(data.getStartingQuest());
+	}
 
 	public String getId() {
-		return id;
+		return data.id;
 	}
 
 	public int getOrderId() {
-		return orderId;
+		return data.orderId;
 	}
 
 	public void reset(){
@@ -73,7 +76,7 @@ public abstract class Chapter {
 			addQuest(quest);
 		}
 		for (Quest quest : getQuests()) {
-			quest.setupPrerequisites();
+			quest.setupPrerequisites(team);
 		}
 	}
 

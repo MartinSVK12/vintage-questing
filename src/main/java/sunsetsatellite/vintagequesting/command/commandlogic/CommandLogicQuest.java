@@ -6,48 +6,55 @@ import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.client.gui.ChapterPage;
 import sunsetsatellite.vintagequesting.core.Chapter;
 import sunsetsatellite.vintagequesting.core.Quest;
+import sunsetsatellite.vintagequesting.core.data.ChapterData;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 
 import java.util.List;
 
 public class CommandLogicQuest {
 	public static int completeQuest(Player sender, QuestData QuestData) {
-		Chapter chapter = getChapter(QuestData);
+		ChapterData chapterData = getChapter(QuestData);
 
-		if (chapter == null) {
+		if (chapterData == null) {
 			sender.sendMessage(QuestData.getId() + " is not in any chapter pages.");
 			return 0;
 		}
 
+		IHasQuests quests = (IHasQuests) sender;
+		Chapter chapter = quests.getQuestTeam().chapters.get(chapterData.id);
+
 		Quest quest = chapter.getQuest(QuestData);
 		quest.forceComplete();
-
+		quests.synchronizeQuests();
 		sender.sendMessage("Quest \"" + QuestData.getTranslatedName() + "\" has been completed successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
 
 	public static int completeQuestDeep(Player sender, QuestData QuestData) {
-		Chapter chapter = getChapter(QuestData);
+		ChapterData chapterData = getChapter(QuestData);
 
-		if (chapter == null) {
+		if (chapterData == null) {
 			sender.sendMessage(QuestData.getId() + " is not in any chapter pages.");
 			return 0;
 		}
 
+		IHasQuests quests = (IHasQuests) sender;
+		Chapter chapter = quests.getQuestTeam().chapters.get(chapterData.id);
 		Quest quest = chapter.getQuest(QuestData);
 		if (quest.isCompleted()) return Command.SINGLE_SUCCESS;
 		for (Quest prerequisiteQuest : quest.getPreRequisites()) {
 			completeQuestDeep(sender, prerequisiteQuest.data);
 		}
 		quest.forceComplete();
-
+		quests.synchronizeQuests();
 		sender.sendMessage("Quest \"" + QuestData.getTranslatedName() + "\" has been completed successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
-	private static Chapter getChapter(QuestData QuestData) {
-		for (Chapter chapterPage : VintageQuesting.CHAPTERS) {
+	private static ChapterData getChapter(QuestData QuestData) {
+		for (ChapterData chapterPage : VintageQuesting.CHAPTERS) {
 			if (chapterPage.hasQuest(QuestData)) {
 				return chapterPage;
 			}
@@ -56,42 +63,35 @@ public class CommandLogicQuest {
 	}
 
 	public static int resetQuest(Player sender, QuestData QuestData) {
-		Chapter chapter = getChapter(QuestData);
+		ChapterData chapterData = getChapter(QuestData);
 
-		if (chapter == null) {
+		if (chapterData == null) {
 			sender.sendMessage(QuestData.getId() + " is not in any chapter pages.");
 			return 0;
 		}
 
+		IHasQuests quests = (IHasQuests) sender;
+		Chapter chapter = quests.getQuestTeam().chapters.get(chapterData.id);
 		Quest quest = chapter.getQuest(QuestData);
 		quest.reset();
-
+		quests.synchronizeQuests();
 		sender.sendMessage("Quest \"" + QuestData.getTranslatedName() + "\" has been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
-	public static int resetChapter(Player sender, Chapter chapter) {
-		List<Quest> quests = chapter.getQuests();
-		int questAmount = quests.size();
-		for (Quest quest : quests) {
-			quest.reset();
-		}
-		sender.sendMessage("Chapter page \"" + chapter.getName() + "\" (" + questAmount + " quests) has been reset successfully!");
+	public static int resetChapter(Player sender, ChapterData chapterData) {
+		IHasQuests player = (IHasQuests) sender;
+		Chapter chapter = player.getQuestTeam().chapters.get(chapterData.id);
+		chapter.reset();
+		player.synchronizeQuests();
+		sender.sendMessage("Chapter page \"" + chapter.getName() + "\") has been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
 	public static int resetAll(Player sender) {
-		int questAmount = 0;
-		for (Chapter chapterPage : VintageQuesting.CHAPTERS) {
-			List<Quest> quests = chapterPage.getQuests();
-			int chapterQuestAmount = quests.size();
-			for (Quest quest : quests) {
-				quest.reset();
-			}
-			questAmount += chapterQuestAmount;
-			sender.sendMessage("Chapter page: " + chapterPage.getName() + " (" + chapterQuestAmount + " quests) has been reset successfully!");
-		}
-		sender.sendMessage("All the " + questAmount + " quests have been reset successfully !");
+		IHasQuests quests = (IHasQuests) sender;
+		quests.getQuestTeam().reset();
+		quests.synchronizeQuests();
 		return Command.SINGLE_SUCCESS;
 	}
 }

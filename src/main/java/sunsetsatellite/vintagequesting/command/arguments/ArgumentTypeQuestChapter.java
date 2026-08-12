@@ -8,25 +8,26 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.data.ChapterData;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class ArgumentTypeQuestChapter implements ArgumentType<Chapter> {
+public class ArgumentTypeQuestChapter implements ArgumentType<ChapterData> {
 
 	public ArgumentTypeQuestChapter() {
 	}
 
-	public static ArgumentType<Chapter> chapter() {
+	public static ArgumentType<ChapterData> chapter() {
 		return new ArgumentTypeQuestChapter();
 	}
 
-	public Chapter parse(StringReader reader) throws CommandSyntaxException {
+	public ChapterData parse(StringReader reader) throws CommandSyntaxException {
 		final String string = reader.readString();
 
-		for (Chapter chapter : getChapters()) {
+		for (ChapterData chapter : getChapters()) {
 			if (chapter.getId().equalsIgnoreCase(string)) {
 				return chapter;
 			}
@@ -35,7 +36,7 @@ public class ArgumentTypeQuestChapter implements ArgumentType<Chapter> {
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		for (Chapter chapter : getChapters()) {
+		for (ChapterData chapter : getChapters()) {
 			if (chapter.getId().startsWith(builder.getRemaining())) {
 				builder.suggest("\"" + chapter.getId() + "\"");
 			}
@@ -44,8 +45,8 @@ public class ArgumentTypeQuestChapter implements ArgumentType<Chapter> {
 		return builder.buildFuture();
 	}
 
-	public Collection<Chapter> getChapters() {
-		List<Chapter> list = new ArrayList<>();
+	public Collection<ChapterData> getChapters() {
+		List<ChapterData> list = new ArrayList<>();
 		VintageQuesting.CHAPTERS.iterator().forEachRemaining(list::add);
 		return list;
 	}

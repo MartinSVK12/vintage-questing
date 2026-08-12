@@ -15,7 +15,7 @@ import java.util.*;
 
 public abstract class ChapterPage {
 
-	public final Chapter chapter;
+	public Chapter chapter;
 
 	public ChapterPage(Chapter chapter) {
 		this.chapter = chapter;
@@ -60,11 +60,11 @@ public abstract class ChapterPage {
 
 	@NotNull
 	public String getId() {
-		return chapter.id;
+		return chapter.data.id;
 	}
 
 	public int getOrderId() {
-		return chapter.orderId;
+		return chapter.data.orderId;
 	}
 
 	public Quest getStartingQuest() {

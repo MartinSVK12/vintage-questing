@@ -5,6 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.PlayerLocal;
 import net.minecraft.client.gui.Screen;
+import net.minecraft.core.world.save.ISaveFormat;
+import net.minecraft.core.world.save.LevelStorage;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.VintageQuestingClient;
 import sunsetsatellite.vintagequesting.client.gui.ScreenQuestbook;
@@ -49,20 +52,4 @@ public abstract class MinecraftMixin {
 			}
 		}
 	}
-
-	/*@Inject(
-		method = "respawn",
-		at = @At("HEAD")
-	)
-	public void saveQuestsOnRespawn(boolean flag, int i, CallbackInfo ci, @Share("questGroup") LocalRef<QuestGroup> questGroup) {
-		questGroup.set(((IHasQuests) thePlayer).getQuestGroup());
-	}
-
-	@Inject(
-		method = "respawn",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/controller/PlayerController;adjustPlayer(Lnet/minecraft/core/entity/player/Player;)V",shift = At.Shift.AFTER)
-	)
-	public void restoreQuestsOnRespawn(boolean flag, int i, CallbackInfo ci, @Share("questGroup") LocalRef<QuestGroup> questGroup) {
-		((IHasQuests) thePlayer).setQuestGroup(questGroup.get());
-	}*/
 }

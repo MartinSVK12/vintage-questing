@@ -10,6 +10,7 @@ import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import sunsetsatellite.vintagequesting.core.registry.ChapterPageRegistry;
 import sunsetsatellite.vintagequesting.core.registry.ChapterRegistry;
+import sunsetsatellite.vintagequesting.util.QuestTeam;
 import turniplabs.halplibe.event.defs.ClientEvents;
 import turniplabs.halplibe.util.dependency.Key;
 
@@ -17,12 +18,19 @@ public class VintageQuestingClient implements ClientModInitializer {
 
 	public static KeyBinding keyOpenQuestbook = new KeyBinding("key.vintagequesting.openQuestbook").bind(InputDevice.keyboard, Keyboard.KEY_GRAVE);
 
+	public static QuestTeam LOCAL_TEAM = null;
 	public static ChapterPageRegistry CHAPTER_PAGES = new ChapterPageRegistry();
 
 	@Override
 	public void onInitializeClient() {
 		GameSettings.register(keyOpenQuestbook);
 		ClientEvents.AFTER_CLIENT_START.listen(Key.of(VintageQuesting.MOD_ID), this::afterClientStart);
+	}
+
+	public static void reloadPages(){
+		VintageQuestingClient.CHAPTER_PAGES.forEach((C)->{
+			C.chapter = VintageQuestingClient.LOCAL_TEAM.chapters.get(C.chapter.getId());
+		});
 	}
 
 	public void afterClientStart() {

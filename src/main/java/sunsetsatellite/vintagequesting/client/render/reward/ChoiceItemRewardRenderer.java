@@ -16,7 +16,7 @@ public class ChoiceItemRewardRenderer extends RewardRenderer<ChoiceItemReward> {
 	public void renderSlot(Chapter chapter, Quest quest, ChoiceItemReward reward, Minecraft mc, List<IRenderable> renderables, int i, int width) {
 		renderables.add(new StringElement(mc, "Choice Item Reward:", 0xFFFFFFFF));
 		for (int j = 0; j < reward.getStacks().size(); j++) {
-			renderables.add(new GuiChoiceItemRewardSlot(mc,width / 2 - 38,24, reward, j));
+			renderables.add(new GuiChoiceItemRewardSlot(mc,width / 2 - 38,24, reward, j, chapter, quest));
 		}
 	}
 }

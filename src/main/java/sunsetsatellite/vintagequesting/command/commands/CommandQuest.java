@@ -13,6 +13,7 @@ import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestChapte
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestId;
 import sunsetsatellite.vintagequesting.command.commandlogic.CommandLogicQuest;
 import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.data.ChapterData;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
 
 public class CommandQuest implements CommandManager.CommandRegistry {
@@ -70,14 +71,14 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 			)
 			// Chapter
 			.then(ArgumentBuilderLiteral.<CommandSource>literal("chapter")
-				.then(ArgumentBuilderRequired.<CommandSource, Chapter>argument("chapter", ArgumentTypeQuestChapter.chapter())
+				.then(ArgumentBuilderRequired.<CommandSource, ChapterData>argument("chapter", ArgumentTypeQuestChapter.chapter())
 					.executes(context ->
 						{
 							Player sender = context.getSource().getSender();
 							if (sender == null) {
 								return 0;
 							}
-							return CommandLogicQuest.resetChapter(sender, context.getArgument("chapter", Chapter.class));
+							return CommandLogicQuest.resetChapter(sender, context.getArgument("chapter", ChapterData.class));
 						}
 					)
 				)

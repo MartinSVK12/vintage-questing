@@ -9,6 +9,7 @@ import sunsetsatellite.vintagequesting.core.Chapter;
 import sunsetsatellite.vintagequesting.core.Quest;
 import sunsetsatellite.vintagequesting.core.Reward;
 import sunsetsatellite.vintagequesting.core.Task;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
@@ -40,7 +41,7 @@ public class NetworkMessageQuestSync implements NetworkMessage {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void handleClientEnv(NetworkContext context) {
-		Chapter chapter = VintageQuesting.CHAPTERS.getItem(chapterId);
+		Chapter chapter = ((IHasQuests) context.player).getQuestTeam().chapters.get(chapterId);
 		if(chapter == null) {
 			VintageQuesting.LOGGER.error("Error while receiving quest data: No chapter with id: {}!", chapterId);
 			return;

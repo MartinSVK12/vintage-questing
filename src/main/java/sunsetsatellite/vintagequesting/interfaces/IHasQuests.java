@@ -1,19 +1,13 @@
 package sunsetsatellite.vintagequesting.interfaces;
 
-import com.mojang.nbt.tags.CompoundTag;
-import sunsetsatellite.vintagequesting.util.QuestGroup;
+import sunsetsatellite.vintagequesting.util.QuestTeam;
 
 public interface IHasQuests {
 
-	QuestGroup getQuestGroup();
+	void setQuestTeam(QuestTeam questTeam);
 
-	void setQuestGroup(QuestGroup group);
+	QuestTeam getQuestTeam();
 
-	void loadData(CompoundTag tag);
+	void synchronizeQuests();
 
-	void resetAll();
-
-	void resetChapter(String id);
-
-	void resetQuest(String id);
 }

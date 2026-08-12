@@ -12,9 +12,14 @@ import org.lwjgl.input.Keyboard;
 
 
 import sunsetsatellite.vintagequesting.client.gui.ItemRenderHelper;
+import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.Quest;
 import sunsetsatellite.vintagequesting.core.instance.reward.ChoiceItemReward;
 import sunsetsatellite.vintagequesting.interfaces.IClickable;
 import sunsetsatellite.vintagequesting.interfaces.IRenderable;
+import sunsetsatellite.vintagequesting.mp.message.NetworkMessageChooseItemReward;
+import turniplabs.halplibe.helper.EnvironmentHelper;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
 public class GuiChoiceItemRewardSlot extends Gui implements IRenderable, IClickable {
 
@@ -24,14 +29,18 @@ public class GuiChoiceItemRewardSlot extends Gui implements IRenderable, IClicka
 	private final ChoiceItemReward reward;
 	private final TooltipElement tooltip;
 	private final int option;
+	public Chapter chapter;
+	public Quest quest;
 
-	public GuiChoiceItemRewardSlot(Minecraft mc, int width, int height, ChoiceItemReward reward, int option) {
+	public GuiChoiceItemRewardSlot(Minecraft mc, int width, int height, ChoiceItemReward reward, int option, Chapter chapter, Quest quest) {
 		this.width = width;
 		this.height = height;
 		this.mc = mc;
 		this.reward = reward;
 		this.tooltip = new TooltipElement(mc);
 		this.option = option;
+		this.chapter = chapter;
+		this.quest = quest;
 	}
 
 	@Override
@@ -89,6 +98,9 @@ public class GuiChoiceItemRewardSlot extends Gui implements IRenderable, IClicka
 
 	@Override
 	public void click() {
+		if(EnvironmentHelper.isMultiplayerClient()){
+			NetworkHandler.sendToServer(new NetworkMessageChooseItemReward(chapter.getId(), quest.data.getId(), reward.data.getId(), option));
+		}
 		reward.choose(option);
 	}
 

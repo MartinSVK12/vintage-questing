@@ -112,8 +112,8 @@ public class ScreenQuestbook extends Screen {
 		for (int i = 0; i < layers.length; i++) {
 			layers[i] = new BGLayer(i);
 		}
-
-		VintageQuestingClient.CHAPTER_PAGES.forEach(chapters::add);
+		VintageQuestingClient.reloadPages();
+		VintageQuestingClient.CHAPTER_PAGES.forEach((chapters::add));
 		chapters.sort(Comparator.comparingInt(ChapterPage::getOrderId));
 	}
 

@@ -2,10 +2,11 @@ package sunsetsatellite.vintagequesting.core.registry;
 
 import net.minecraft.core.data.registry.Registry;
 import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.core.data.ChapterData;
 
 import java.util.Objects;
 
-public class ChapterRegistry extends Registry<Chapter> {
+public class ChapterRegistry extends Registry<ChapterData> {
 	/*@Override
 	public void register(String key, Chapter item) {
 		if (!Objects.equals(item.getId(), key)) {

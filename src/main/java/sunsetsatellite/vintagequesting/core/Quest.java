@@ -2,11 +2,11 @@ package sunsetsatellite.vintagequesting.core;
 
 import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.core.item.IItemConvertible;
-import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
 import sunsetsatellite.vintagequesting.core.data.RewardData;
 import sunsetsatellite.vintagequesting.core.data.TaskData;
 import sunsetsatellite.vintagequesting.util.Logic;
+import sunsetsatellite.vintagequesting.util.QuestTeam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +29,11 @@ public class Quest {
 		ArrayList<Quest> preRequisiteList = new ArrayList<>();
 		ArrayList<Reward> rewardList = new ArrayList<>();
 		for (TaskData task : data.getTasks()) {
+			task.clearInstance();
 			taskList.add(task.getInstance());
 		}
 		for (RewardData reward : data.getRewards()) {
+			reward.clearInstance();
 			rewardList.add(reward.getInstance());
 		}
 		this.tasks = taskList;
@@ -39,10 +41,10 @@ public class Quest {
 		this.rewards = rewardList;
 	}
 
-	public void setupPrerequisites() {
+	public void setupPrerequisites(QuestTeam team) {
 		this.preRequisites = new ArrayList<>();
 		for (QuestData preRequisite : data.getPreRequisites()) {
-			for (Chapter chapter : VintageQuesting.CHAPTERS) {
+			for (Chapter chapter : team.getChapters()) {
 				Quest quest = chapter.getQuest(preRequisite);
 				if (quest != null) {
 					this.preRequisites.add(quest);

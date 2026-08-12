@@ -11,6 +11,7 @@ import sunsetsatellite.vintagequesting.client.gui.generic.VerticalContainerEleme
 import sunsetsatellite.vintagequesting.core.Quest;
 import sunsetsatellite.vintagequesting.core.Reward;
 import sunsetsatellite.vintagequesting.core.Task;
+import sunsetsatellite.vintagequesting.mp.message.NetworkMessageReceiveQuestReward;
 import sunsetsatellite.vintagequesting.mp.message.NetworkMessageSubmitQuests;
 import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
@@ -104,6 +105,10 @@ public class ScreenQuestInfo extends Screen {
 		if (button.id == 0) {
 			this.mc.displayScreen(getParentScreen());
 		} else if (button == claimButton) {
+			if(EnvironmentHelper.isMultiplayerClient()){
+				NetworkHandler.sendToServer(new NetworkMessageReceiveQuestReward(parent.getCurrentPage().chapter.getId(), quest.data.getId()));
+				return;
+			}
 			for (Reward reward : quest.getRewards()) {
 				reward.give(mc.thePlayer);
 			}
@@ -123,10 +128,10 @@ public class ScreenQuestInfo extends Screen {
 		} else {
 			claimButton.displayString = "Claim";
 		}
-		if (mc.currentWorld.isClientSide) {
+		/*if (mc.currentWorld.isClientSide) {
 			claimButton.enabled = false;
 			claimButton.displayString = "Can't claim in multiplayer yet.";
-		}
+		}*/
 		submitButton.enabled = !quest.isCompleted();
 	}
 }

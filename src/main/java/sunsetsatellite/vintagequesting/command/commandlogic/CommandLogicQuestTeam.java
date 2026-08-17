@@ -12,6 +12,7 @@ import net.minecraft.server.net.command.IServerCommandSource;
 import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.util.QuestTeam;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 public class CommandLogicQuestTeam {
 	public static int renameTeam(CommandContext<CommandSource> c) {
@@ -34,7 +35,7 @@ public class CommandLogicQuestTeam {
 
 	public static int leaveTeam(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if (sender == null) return 0;
 		IHasQuests quests = (IHasQuests) sender;
@@ -51,7 +52,7 @@ public class CommandLogicQuestTeam {
 
 	public static int kickFromTeam(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if(sender == null) return 0;
 
@@ -88,7 +89,7 @@ public class CommandLogicQuestTeam {
 
 	public static int cancelInvite(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if(sender == null) return 0;
 
@@ -116,7 +117,7 @@ public class CommandLogicQuestTeam {
 
 	public static int declineInvite(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if(sender == null) return 0;
 
@@ -150,7 +151,7 @@ public class CommandLogicQuestTeam {
 
 	public static int acceptInvite(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if(sender == null) return 0;
 
@@ -186,7 +187,7 @@ public class CommandLogicQuestTeam {
 
 	public static int invitePlayer(CommandContext<CommandSource> c) throws CommandSyntaxException {
 		CommandSource source = c.getSource();
-		if (!(source instanceof IServerCommandSource)) throw CommandExceptions.multiplayerWorldOnly().create();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
 		Player sender = c.getSource().getSender();
 		if(sender == null) return 0;
 

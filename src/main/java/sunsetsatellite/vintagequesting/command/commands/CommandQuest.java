@@ -2,6 +2,7 @@ package sunsetsatellite.vintagequesting.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentTypeBool;
+import com.mojang.brigadier.arguments.ArgumentTypeString;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
 import com.mojang.brigadier.builder.ArgumentBuilderRequired;
@@ -12,7 +13,7 @@ import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestChapter;
 import sunsetsatellite.vintagequesting.command.arguments.ArgumentTypeQuestId;
 import sunsetsatellite.vintagequesting.command.commandlogic.CommandLogicQuest;
-import sunsetsatellite.vintagequesting.core.Chapter;
+import sunsetsatellite.vintagequesting.command.commandlogic.CommandLogicQuestTeam;
 import sunsetsatellite.vintagequesting.core.data.ChapterData;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
 
@@ -101,6 +102,41 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 		return builder;
 	}
 
+	public static ArgumentBuilder<CommandSource, ArgumentBuilderLiteral<CommandSource>> team(ArgumentBuilder<CommandSource, ArgumentBuilderLiteral<CommandSource>> builder) {
+		builder
+			.then(ArgumentBuilderLiteral.<CommandSource>literal("team")
+				.then(ArgumentBuilderLiteral.<CommandSource>literal("invite")
+					.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+						.executes(CommandLogicQuestTeam::invitePlayer)
+					)
+					.then(ArgumentBuilderLiteral.<CommandSource>literal("accept")
+						.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+							.executes(CommandLogicQuestTeam::acceptInvite))
+					.then(ArgumentBuilderLiteral.<CommandSource>literal("decline")
+						.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+							.executes(CommandLogicQuestTeam::declineInvite))
+					.then(ArgumentBuilderLiteral.<CommandSource>literal("cancel")
+						.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+							.executes(CommandLogicQuestTeam::cancelInvite)
+					)
+				)
+				.then(ArgumentBuilderLiteral.<CommandSource>literal("kick")
+					.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+						.executes(CommandLogicQuestTeam::kickFromTeam)
+				))
+				.then(ArgumentBuilderLiteral.<CommandSource>literal("leave")
+					.executes(CommandLogicQuestTeam::leaveTeam)
+				)
+				.then(ArgumentBuilderLiteral.<CommandSource>literal("rename")
+					.then(ArgumentBuilderRequired.<CommandSource,String>argument("name", ArgumentTypeString.word())
+						.executes(CommandLogicQuestTeam::renameTeam)
+					)
+				)
+			))));
+		return builder;
+	}
+
+
 	@Override
 	public void register(CommandDispatcher<CommandSource> dispatcher) {
 		VintageQuesting.LOGGER.info("Command registered: quest");
@@ -108,6 +144,7 @@ public class CommandQuest implements CommandManager.CommandRegistry {
 
 		questComplete(builder);
 		questReset(builder);
+		team(builder);
 
 		dispatcher.register(builder);
 	}

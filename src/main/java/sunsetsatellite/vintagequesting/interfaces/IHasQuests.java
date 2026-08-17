@@ -8,6 +8,7 @@ public interface IHasQuests {
 
 	QuestTeam getQuestTeam();
 
+	void synchronizeQuestsForPlayer();
 	void synchronizeQuests();
 
 }

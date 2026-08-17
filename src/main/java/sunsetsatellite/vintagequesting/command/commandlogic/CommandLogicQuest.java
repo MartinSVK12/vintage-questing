@@ -32,24 +32,24 @@ public class CommandLogicQuest {
 	}
 
 
-	public static int completeQuestDeep(Player sender, QuestData QuestData) {
-		ChapterData chapterData = getChapter(QuestData);
+	public static int completeQuestDeep(Player sender, QuestData questData) {
+		ChapterData chapterData = getChapter(questData);
 
 		if (chapterData == null) {
-			sender.sendMessage(QuestData.getId() + " is not in any chapter pages.");
+			sender.sendMessage(questData.getId() + " is not in any chapter pages.");
 			return 0;
 		}
 
 		IHasQuests quests = (IHasQuests) sender;
 		Chapter chapter = quests.getQuestTeam().chapters.get(chapterData.id);
-		Quest quest = chapter.getQuest(QuestData);
+		Quest quest = chapter.getQuest(questData);
 		if (quest.isCompleted()) return Command.SINGLE_SUCCESS;
 		for (Quest prerequisiteQuest : quest.getPreRequisites()) {
 			completeQuestDeep(sender, prerequisiteQuest.data);
 		}
 		quest.forceComplete();
 		quests.synchronizeQuests();
-		sender.sendMessage("Quest \"" + QuestData.getTranslatedName() + "\" has been completed successfully!");
+		sender.sendMessage("Quest \"" + questData.getTranslatedName() + "\" has been completed successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -84,7 +84,7 @@ public class CommandLogicQuest {
 		Chapter chapter = player.getQuestTeam().chapters.get(chapterData.id);
 		chapter.reset();
 		player.synchronizeQuests();
-		sender.sendMessage("Chapter page \"" + chapter.getName() + "\") has been reset successfully!");
+		sender.sendMessage("Chapter page \"" + chapter.getName() + "\" has been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -92,6 +92,7 @@ public class CommandLogicQuest {
 		IHasQuests quests = (IHasQuests) sender;
 		quests.getQuestTeam().reset();
 		quests.synchronizeQuests();
+		sender.sendMessage("All quests have been reset successfully!");
 		return Command.SINGLE_SUCCESS;
 	}
 }

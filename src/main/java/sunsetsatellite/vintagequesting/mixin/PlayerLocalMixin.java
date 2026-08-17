@@ -66,4 +66,9 @@ public abstract class PlayerLocalMixin extends Player implements IHasQuests {
 	public void synchronizeQuests() {
 
 	}
+
+	@Override
+	public void synchronizeQuestsForPlayer() {
+
+	}
 }

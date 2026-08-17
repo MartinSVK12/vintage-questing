@@ -20,6 +20,7 @@ public class QuestTeam {
 	public UUID owner;
 	public List<UUID> members = new ArrayList<>();
 	public Map<String, Chapter> chapters = new HashMap<>();
+	public List<UUID> invites = new ArrayList<>();
 
 	public QuestTeam(String name, UUID owner) {
 		this.name = name;
@@ -43,6 +44,9 @@ public class QuestTeam {
 		chapters.clear();
 		for (ChapterData chapter : VintageQuesting.CHAPTERS) {
 			chapters.put(chapter.id, new Chapter(chapter, this));
+		}
+		for (Chapter chapter : getChapters()) {
+			chapter.questList.forEach(quest -> quest.setupPrerequisites(this));
 		}
 	}
 

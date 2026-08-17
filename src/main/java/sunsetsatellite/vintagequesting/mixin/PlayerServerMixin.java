@@ -2,6 +2,7 @@ package sunsetsatellite.vintagequesting.mixin;
 
 import com.mojang.nbt.tags.CompoundTag;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.util.helper.UUIDHelper;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.player.PlayerServer;
@@ -27,6 +28,8 @@ public abstract class PlayerServerMixin extends Player implements IHasQuests {
 
 	@Shadow
 	public PacketHandlerServer playerNetServerHandler;
+	@Shadow
+	public MinecraftServer mcServer;
 	@Unique
 	public QuestTeam questTeam = null;
 	@Unique
@@ -74,6 +77,7 @@ public abstract class PlayerServerMixin extends Player implements IHasQuests {
 
 	@Override
 	public void setQuestTeam(QuestTeam questTeam) {
+		if(questTeam == this.questTeam) return;
 		if(this.questTeam != null){
 			this.questTeam.members.remove(uuid);
 			if(this.questTeam.members.isEmpty()) {
@@ -81,11 +85,24 @@ public abstract class PlayerServerMixin extends Player implements IHasQuests {
 			}
 		}
 		questTeam.members.add(uuid);
-		this.questTeam = this.remoteTeam = questTeam;
+		this.questTeam = questTeam;
+		synchronizeQuests();
 	}
 
 	@Override
 	public void synchronizeQuests() {
+		remoteTeam = questTeam;
+		for (UUID member : questTeam.members) {
+			for (PlayerServer playerEntity : mcServer.playerList.playerEntities) {
+				if(playerEntity.uuid == member){
+					((IHasQuests) playerEntity).synchronizeQuestsForPlayer();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void synchronizeQuestsForPlayer() {
 		remoteTeam = questTeam;
 	}
 }

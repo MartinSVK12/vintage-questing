@@ -32,7 +32,7 @@ public class ArgumentTypeQuestChapter implements ArgumentType<ChapterData> {
 				return chapter;
 			}
 		}
-		throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument(), () -> "Failed to find chapter: " + string + " (Quest Doesn't Exist)");
+		throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument(), () -> "Failed to find chapter: " + string + " (Chapter doesn't exist.)");
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {

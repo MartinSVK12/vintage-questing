@@ -31,7 +31,7 @@ public class ArgumentTypeQuestId implements ArgumentType<QuestData> {
 				return QuestData;
 			}
 		}
-		throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument(), () -> "Failed to find quest: " + string + " (Quest Doesn't Exist)");
+		throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument(), () -> "Failed to find quest: " + string + " (Quest doesn't exist.)");
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {

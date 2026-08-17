@@ -1,6 +1,7 @@
 package sunsetsatellite.vintagequesting.client.gui;
 
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.ItemElement;
 import net.minecraft.client.gui.Screen;
@@ -31,6 +32,8 @@ import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.VintageQuestingClient;
 import sunsetsatellite.vintagequesting.core.Quest;
 import sunsetsatellite.vintagequesting.core.data.QuestData;
+import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
+import sunsetsatellite.vintagequesting.util.QuestTeam;
 
 import java.util.*;
 
@@ -455,6 +458,8 @@ public class ScreenQuestbook extends Screen {
 
 	protected void renderLabels() {
 		drawStringCenteredNoShadow(this.fontRenderer, I18n.getInstance().translateKey("gui.vq.questbook.label.title")/* + " " + viewportZoom + " X:" + currentShiftX + ", Y:" + currentShiftY*/, this.width / 2, 5, 0xFFFFFF);
+		QuestTeam team = ((IHasQuests) Minecraft.getMinecraft().thePlayer).getQuestTeam();
+		drawStringNoShadow(this.fontRenderer, "Team: '"+team.name+"' | Members: "+team.members.size(), 5, 5, 0xFFFFFF);
 	}
 
 

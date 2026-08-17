@@ -14,6 +14,10 @@ import sunsetsatellite.vintagequesting.util.QuestTeam;
 import turniplabs.halplibe.event.defs.ClientEvents;
 import turniplabs.halplibe.util.dependency.Key;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class VintageQuestingClient implements ClientModInitializer {
 
 	public static KeyBinding keyOpenQuestbook = new KeyBinding("key.vintagequesting.openQuestbook").bind(InputDevice.keyboard, Keyboard.KEY_GRAVE);

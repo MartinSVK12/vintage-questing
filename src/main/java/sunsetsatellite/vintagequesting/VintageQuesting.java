@@ -48,6 +48,8 @@ public class VintageQuesting implements ModInitializer {
 	public static RewardRegistry REWARDS = new RewardRegistry();
 	public static TaskRegistry TASKS = new TaskRegistry();
 
+	public static boolean alreadyLoaded = false;
+
 	@Override
 	public void onInitialize() {
 		Catalyst.DIMENSION_LOAD_SIGNAL.connect(LoadSaveListener.INSTANCE);
@@ -64,9 +66,11 @@ public class VintageQuesting implements ModInitializer {
 
 
 	public void afterGameStart(){
-		FabricLoader.getInstance().getEntrypointContainers("vintagequesting", VQPlugin.class).stream().map(EntrypointContainer::getEntrypoint).forEach(plugin -> {
-			if (plugin.shouldLoad()) plugin.initializePlugin();
-		});
+		if(!alreadyLoaded){
+			FabricLoader.getInstance().getEntrypointContainers("vintagequesting", VQPlugin.class).stream().map(EntrypointContainer::getEntrypoint).forEach(plugin -> {
+				if (plugin.shouldLoad()) plugin.initializePlugin();
+			});
+		}
 	}
 
 	public static void submitQuests(Player player) {
@@ -96,6 +100,12 @@ public class VintageQuesting implements ModInitializer {
 			if(EnvironmentHelper.isMultiplayerClient()) return;
 			if (signal == Catalyst.DIMENSION_LOAD_SIGNAL) {
 				if(world.dimension.id != 0) return;
+				if(EnvironmentHelper.isMultiplayerServer() && VintageQuesting.CHAPTERS.size() == 0){
+					FabricLoader.getInstance().getEntrypointContainers("vintagequesting", VQPlugin.class).stream().map(EntrypointContainer::getEntrypoint).forEach(plugin -> {
+						if (plugin.shouldLoad()) plugin.initializePlugin();
+					});
+					alreadyLoaded = true;
+				}
 				File file = world.getLevelStorage().getDataFile("vintagequesting_teams");
 				VintageQuesting.TEAMS.clear();
 				if (file == null) return;

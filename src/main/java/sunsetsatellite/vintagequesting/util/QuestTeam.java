@@ -18,9 +18,9 @@ public class QuestTeam {
 
 	public String name;
 	public UUID owner;
-	public List<UUID> members = new ArrayList<>();
+	public Set<UUID> members = new HashSet<>();
 	public Map<String, Chapter> chapters = new HashMap<>();
-	public List<UUID> invites = new ArrayList<>();
+	public Set<UUID> invites = new HashSet<>();
 
 	public QuestTeam(String name, UUID owner) {
 		this.name = name;

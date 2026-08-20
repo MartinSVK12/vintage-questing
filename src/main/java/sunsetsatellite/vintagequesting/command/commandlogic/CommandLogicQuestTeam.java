@@ -3,9 +3,11 @@ package sunsetsatellite.vintagequesting.command.commandlogic;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.command.CommandSource;
 import net.minecraft.core.net.command.exceptions.CommandExceptions;
+import net.minecraft.core.util.helper.UUIDHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.player.PlayerServer;
 import net.minecraft.server.net.command.IServerCommandSource;
@@ -13,6 +15,9 @@ import sunsetsatellite.vintagequesting.VintageQuesting;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.util.QuestTeam;
 import turniplabs.halplibe.helper.EnvironmentHelper;
+
+import java.util.Objects;
+import java.util.UUID;
 
 public class CommandLogicQuestTeam {
 	public static int renameTeam(CommandContext<CommandSource> c) {
@@ -23,7 +28,7 @@ public class CommandLogicQuestTeam {
 		IHasQuests quests = (IHasQuests) sender;
 
 		QuestTeam team = quests.getQuestTeam();
-		if (sender.uuid != team.owner) {
+		if (!Objects.equals(sender.uuid, team.owner)) {
 			sender.sendMessage("You are not the owner of this team!");
 			return 0;
 		}
@@ -39,7 +44,7 @@ public class CommandLogicQuestTeam {
 		Player sender = c.getSource().getSender();
 		if (sender == null) return 0;
 		IHasQuests quests = (IHasQuests) sender;
-		if(quests.getQuestTeam().owner == sender.uuid) {
+		if(Objects.equals(quests.getQuestTeam().owner, sender.uuid)) {
 			sender.sendMessage("Cannot leave your own team!");
 			return 0;
 		}
@@ -47,6 +52,24 @@ public class CommandLogicQuestTeam {
 		VintageQuesting.TEAMS.put(sender.uuid, team);
 		quests.setQuestTeam(team);
 		sender.sendMessage(String.format("Left team \"%s\" successfully!",team.name));
+		return Command.SINGLE_SUCCESS;
+	}
+
+	public static int listTeam(CommandContext<CommandSource> c) throws CommandSyntaxException {
+		CommandSource source = c.getSource();
+		if (EnvironmentHelper.isSingleplayerClient()) throw CommandExceptions.multiplayerWorldOnly().create();
+		Player sender = c.getSource().getSender();
+		if (sender == null) return 0;
+		IHasQuests quests = (IHasQuests) sender;
+		QuestTeam team = quests.getQuestTeam();
+		sender.sendMessage(String.format("Members of team \"%s\":", team.name));
+		for (UUID member : team.members) {
+			for (PlayerServer player : MinecraftServer.getInstance().playerList.playerEntities) {
+				if(player.uuid.equals(member)){
+					sender.sendMessage("- "+player.username);
+				}
+			}
+		}
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -63,7 +86,7 @@ public class CommandLogicQuestTeam {
 
 		if(otherPlayer != null && otherPlayer != c.getSource().getSender()) {
 			IHasQuests quests = (IHasQuests) otherPlayer;
-			if (sender.uuid != ((IHasQuests) sender).getQuestTeam().owner) {
+			if (!Objects.equals(sender.uuid, ((IHasQuests) sender).getQuestTeam().owner)) {
 				sender.sendMessage("You are not the owner of this team!");
 				return 0;
 			}
@@ -199,7 +222,7 @@ public class CommandLogicQuestTeam {
 		if(otherPlayer != null && otherPlayer != c.getSource().getSender()) {
 			IHasQuests quests = (IHasQuests) sender;
 			QuestTeam team = quests.getQuestTeam();
-			if (sender.uuid != team.owner) {
+			if (!Objects.equals(sender.uuid, team.owner)) {
 				sender.sendMessage("You are not the owner of this team!");
 				return 0;
 			}

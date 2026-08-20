@@ -4,6 +4,8 @@ import com.mojang.nbt.NbtIo;
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.Tag;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.command.CommandManager;
@@ -22,9 +24,12 @@ import sunsetsatellite.vintagequesting.core.registry.*;
 import sunsetsatellite.vintagequesting.interfaces.IHasQuests;
 import sunsetsatellite.vintagequesting.mp.message.*;
 import sunsetsatellite.vintagequesting.util.QuestTeam;
+import sunsetsatellite.vintagequesting.util.VQPlugin;
 import turniplabs.halplibe.HalpLibe;
+import turniplabs.halplibe.event.defs.CommonEvents;
 import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
+import turniplabs.halplibe.util.dependency.Key;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +58,15 @@ public class VintageQuesting implements ModInitializer {
 		NetworkHandler.registerNetworkMessage(NetworkMessageSubmitQuests::new);
 		NetworkHandler.registerNetworkMessage(NetworkMessageCompleteClickTask::new);
 		NetworkHandler.registerNetworkMessage(NetworkMessageReceiveQuestReward::new);
+		CommonEvents.AFTER_GAME_START.listen(Key.of(MOD_ID), this::afterGameStart);
 		LOGGER.info("Vintage Questing initialized.");
+	}
+
+
+	public void afterGameStart(){
+		FabricLoader.getInstance().getEntrypointContainers("vintagequesting", VQPlugin.class).stream().map(EntrypointContainer::getEntrypoint).forEach(plugin -> {
+			if (plugin.shouldLoad()) plugin.initializePlugin();
+		});
 	}
 
 	public static void submitQuests(Player player) {

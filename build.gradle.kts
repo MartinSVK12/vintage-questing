@@ -323,7 +323,6 @@ if(githubToken.isPresent){
 			releaseBuilder.name(modVersion)
 			releaseBuilder.body(Files.readString(project.projectDir.toPath().resolve("CHANGELOG.md")))
 			releaseBuilder.commitish("8.0")
-			releaseBuilder.prerelease(true)
 
 			val release = releaseBuilder.create()
 			release.uploadAsset(

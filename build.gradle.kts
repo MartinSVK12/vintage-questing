@@ -3,9 +3,23 @@ import com.smushytaco.lwjgl_gradle.Preset
 import groovy.namespace.QName
 import groovy.util.Node
 import groovy.xml.XmlParser
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URL
+import java.nio.file.Files
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath("org.kohsuke:github-api:1.135")
+	}
+}
+
 
 plugins {
 	alias(libs.plugins.loom)
@@ -250,6 +264,9 @@ tasks {
 // Removes LWJGL2 dependencies
 configurations.configureEach { exclude(group = "org.lwjgl.lwjgl") }
 
+val modrinthToken: Provider<String> = providers.gradleProperty("modrinthToken")
+val githubToken: Provider<String> = providers.gradleProperty("githubToken")
+
 publishing {
 	if(checkVersion(modGroup, modName, modVersion)){
 		repositories {
@@ -264,9 +281,9 @@ publishing {
 
 			publications {
 				create<MavenPublication>("maven") {
-					groupId = project.property("mod_group").toString()
-					artifactId = project.property("mod_name").toString()
-					version = project.property("mod_version").toString()
+					groupId = modGroup
+					artifactId = modName
+					version = modVersion
 					from(components["java"])
 				}
 			}
@@ -285,10 +302,38 @@ fun checkVersion(group: String, name: String, version: String): Boolean {
 			System.err.println("Version $version of $group.$name already exists!")
 			false
 		} else {
+			System.out.println("Version $version of $group.$name ready to release!")
 			true
 		}
 	} catch (e: IOException) {
-		System.err.println(e.message)
+		System.err.println("Failed to check version for $group.$name!")
+		e.printStackTrace()
 		true
+	}
+}
+
+if(githubToken.isPresent){
+	tasks.register("github") {
+		description = "Publishes mod to GitHub"
+		doLast {
+			val github = GitHub.connectUsingOAuth(githubToken.get())
+			val repository = github.getRepository("MartinSVK12/vintage-questing")
+
+			val releaseBuilder = GHReleaseBuilder(repository, modVersion)
+			releaseBuilder.name(modVersion)
+			releaseBuilder.body(Files.readString(project.projectDir.toPath().resolve("CHANGELOG.md")))
+			releaseBuilder.commitish("8.0")
+			releaseBuilder.prerelease(true)
+
+			val release = releaseBuilder.create()
+			release.uploadAsset(
+				project.file(tasks.named("jar").get().outputs.files.singleFile),
+				"application/java-archive"
+			)
+			release.uploadAsset(
+				project.file(tasks.named("sourcesJar").get().outputs.files.singleFile),
+				"application/java-archive"
+			)
+		}
 	}
 }
